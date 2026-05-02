@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+:root {
+  --bg-main: #0d1210;
+  --bg-secondary: #1a2a22;
+  --accent-gold: #e6af2e;
+  --accent-gold-light: #f5d061;
+  --text-main: #ffffff;
+  --text-muted: #a8b3ac;
+  --card-bg: rgba(26, 42, 34, 0.5);
+  --card-border: rgba(230, 175, 46, 0.15);
+  --danger: #ff4757;
+  --success: #2ed573;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* UPDATED BACKGROUND WITH ddd.jpg */
+body {
+  background-color: var(--bg-main);
+  background-image: linear-gradient(135deg, rgba(13, 18, 16, 0.95) 0%, rgba(13, 18, 16, 0.85) 100%), 
+                    url("{{ url_for('static', filename='images/ddd.jpg') }}");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  color: var(--text-main);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* SUBTLE DOT PATTERN (Kept from your original) */
+body::before {
+  content: "";
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+  z-index: -1;
+}
+
+/* LAYOUT */
+.layout { display: flex; }
+
+/* SIDEBAR */
+.sidebar {
+  width: 260px;
+  height: 100vh;
+  background: rgba(13, 18, 16, 0.7);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 30px 20px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  z-index: 20;
+}
+
+.sidebar .logo {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  font-size: 24px;
+  margin-bottom: 50px;
+  padding-left: 10px;
+  background: linear-gradient(90deg, var(--accent-gold-light), var(--accent-gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 14px 20px;
+  margin-bottom: 10px;
+  border-radius: 12px;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.nav-item i { font-size: 18px; width: 20px; text-align: center; }
+
+.nav-item:hover {
+  background: rgba(230, 175, 46, 0.08);
+  color: var(--accent-gold-light);
+  transform: translateX(6px);
+}
+
+.nav-item.active {
+  background: linear-gradient(90deg, var(--accent-gold), #d49511);
+  color: var(--bg-main);
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(230, 175, 46, 0.2);
+}
+
+/* MAIN CONTENT */
+.main {
+  margin-left: 260px;
+  width: calc(100% - 260px);
+}
+
+/* HEADER */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  background: rgba(13, 18, 16, 0.5);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.search-bar {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 10px 20px;
+  border-radius: 20px;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: 0.3s;
+}
+
+.search-bar:focus-within {
+  border-color: rgba(230, 175, 46, 0.5);
+  box-shadow: 0 0 10px rgba(230, 175, 46, 0.1);
+}
+
+.search-bar input {
+  background: transparent;
+  border: none;
+  color: white;
+  outline: none;
+  font-family: 'Poppins';
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.user-profile a {
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.user-profile a:hover {
+  color: var(--danger);
+}
+
+/* CONTAINER */
+.container {
+  max-width: 1400px;
+  margin: auto;
+  padding: 40px;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.dashboard-header h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 32px;
+  font-weight: 800;
+}
+
+.dashboard-header span {
+  background: linear-gradient(to right, #ffffff, var(--accent-gold-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.btn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.btn-primary {
+  background: linear-gradient(90deg, var(--accent-gold), #d49511);
+  color: var(--bg-main);
+}
+
+.btn-secondary {
+  background: rgba(255,255,255,0.05);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+.btn-primary:hover {
+  box-shadow: 0 6px 20px rgba(230, 175, 46, 0.3);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+  margin-bottom: 25px;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 25px;
+}
+
+/* CARDS */
+.card {
+  background: var(--card-bg);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 25px;
+  border-radius: 16px;
+  transition: 0.3s;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(230, 175, 46, 0.3);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.card-icon {
+  width: 45px;
+  height: 45px;
+  border-radius: 12px;
+  background: rgba(230, 175, 46, 0.1);
+  color: var(--accent-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.card h3 {
+  font-size: 14px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.amount {
+  font-family: 'Montserrat';
+  font-size: 32px;
+  font-weight: 800;
+}
+
+.amount span { color: var(--accent-gold-light); font-size: 24px; margin-right: 4px; }
+
+/* AI INSIGHT BANNER */
+.ai-banner {
+  grid-column: 1 / -1;
+  background: linear-gradient(135deg, rgba(26, 42, 34, 0.7), rgba(230, 175, 46, 0.05));
+  border: 1px solid rgba(230, 175, 46, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.ai-banner::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: 16px;
+  padding: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: borderGlow 4s linear infinite;
+}
+
+@keyframes borderGlow {
+  0% { opacity: 0.1; }
+  50% { opacity: 0.8; }
+  100% { opacity: 0.1; }
+}
+
+.ai-icon {
+  font-size: 24px;
+  color: var(--accent-gold-light);
+  background: rgba(230, 175, 46, 0.15);
+  padding: 15px;
+  border-radius: 12px;
+}
+
+.ai-content h3 { color: var(--accent-gold-light); margin-bottom: 5px; font-size: 16px; font-weight: 600;}
+.ai-content p { color: #d1d5d3; font-size: 14px; line-height: 1.6; }
+
+/* LISTS & BARS */
+.transaction-list { margin-top: 15px; }
+.transaction-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  transition: 0.3s;
+}
+.transaction-item:hover {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  padding: 15px 10px;
+}
+.transaction-item:last-child { border-bottom: none; }
+.t-info { display: flex; align-items: center; gap: 15px; }
+.t-icon { width: 45px; height: 45px; border-radius: 50%; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; }
+.t-details h4 { font-size: 14px; font-weight: 500; }
+.t-details p { font-size: 12px; color: var(--text-muted); }
+.t-amount { font-family: 'Montserrat'; font-weight: 700; font-size: 15px; }
+
+/* ANIMATION */
+.fade { animation: fade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+@keyframes fade {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* RESPONSIVE */
+@media(max-width: 1024px) {
+  .stats-grid { grid-template-columns: 1fr; }
+  .content-grid { grid-template-columns: 1fr; }
+}
+
+@media(max-width: 768px) {
+  .sidebar { width: 80px; padding: 20px 10px; }
+  .main { margin-left: 80px; width: calc(100% - 80px); }
+  .sidebar .logo span { display: none; }
+  .nav-item span { display: none; }
+  .nav-item { justify-content: center; padding: 14px 0; }
+  .dashboard-header { flex-direction: column; align-items: flex-start; gap: 15px; }
+  header { padding: 15px 20px; }
+  .container { padding: 25px; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="layout">
+
+<aside class="sidebar">
+  <div class="logo">
+    <i class="fas fa-wallet"></i> <span>SE AI</span>
+  </div>
+
+  <nav>
+    <a href="/dashboard" class="nav-item active"><i class="fas fa-home"></i> <span>Dashboard</span></a>
+    <a href="/budget" class="nav-item"><i class="fas fa-chart-pie"></i> <span>Budget</span></a>
+    <a href="/analytics" class="nav-item"><i class="fas fa-chart-line"></i> <span>Analytics</span></a>
+    <a href="/settings" class="nav-item"><i class="fas fa-cog"></i> <span>Settings</span></a>
+  </nav>
+</aside>
+
+<main class="main">
+
+  <header>
+    <div class="user-profile">
+      <a href="/logout" title="Logout">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </a>
+    </div>
+  </header>
+
+  <div class="container fade" id="page">
+
+    <div class="dashboard-header">
+      <h1>Welcome back, <span>{{ name }}</span> 👋</h1>
+      <div style="display:flex; gap:15px;">
+        <a href="/statement" class="btn btn-secondary"><i class="fas fa-download"></i> Statement</a>
+        <button onclick="openExpenseModal()" class="btn btn-primary" style="border:none; cursor:pointer;">
+  <i class="fas fa-plus"></i> New Expense
+</button>
+      </div>
+    </div>
+
+<div class="stats-grid">
+
+  <!-- 💸 EXPENSE -->
+  <div class="card">
+    <div class="card-header">
+      <h3>Total Expenses</h3>
+      <div class="card-icon"><i class="fas fa-wallet"></i></div>
+    </div>
+    <div class="amount">
+      <span>₹</span>{{ "{:,.2f}".format(total) if total else "0.00" }}
+    </div>
+  </div>
+
+  <!-- 💰 INCOME -->
+  <div class="card">
+    <div class="card-header">
+      <h3>Total Income</h3>
+      <div class="card-icon"><i class="fas fa-arrow-down"></i></div>
+    </div>
+    <div class="amount" style="color:#2ed573;">
+      <span>₹</span>{{ "{:,.2f}".format(income) if income else "0.00" }}
+    </div>
+  </div>
+
+  <!-- 📅 MONTH -->
+  <div class="card">
+    <div class="card-header">
+      <h3>This Month</h3>
+      <div class="card-icon"><i class="fas fa-calendar-alt"></i></div>
+    </div>
+    <div class="amount">
+      <span>₹</span>{{ "{:,.2f}".format(monthly) if monthly else "0.00" }}
+    </div>
+  </div>
+
+  <!-- 🏦 BALANCE -->
+  <div class="card">
+    <div class="card-header">
+      <h3>Account Balance</h3>
+      <div class="card-icon"><i class="fas fa-university"></i></div>
+    </div>
+    <div class="amount" style="color: {{ '#2ed573' if balance >= 0 else '#ff4757' }}">
+      <span>₹</span>{{ "{:,.2f}".format(balance) if balance else "0.00" }}
+    </div>
+  </div>
+
+</div>
+
+    <div class="card ai-banner">
+      <div class="ai-icon"><i class="fas fa-robot"></i></div>
+      <div class="ai-content">
+        <h3>SmartExpense AI Insight</h3>
+        <p>You have recorded <strong>{{ expenses|length }}</strong> total expenses. Tip: To get better AI insights, make sure to categorise your future expenses consistently!</p>
+      </div>
+    </div>
+
+    <div class="content-grid" style="margin-top: 25px;">
+      
+      <div class="card" style="grid-column: 1 / -1;">
+        <h3 style="font-size:18px; color:#fff; margin-bottom:15px; font-weight: 600;">Recent Transactions</h3>
+        
+        <div class="transaction-list">
+          {% for txn in expenses[::-1][:5] %}
+          <div class="transaction-item">
+            <div class="t-info">
+              <div class="t-icon" style="color:#ff9f43;">
+                {% if txn[4].lower() == 'food' %}
+                  <i class="fas fa-utensils"></i>
+                {% elif txn[4].lower() == 'travel' %}
+                  <i class="fas fa-car"></i>
+                {% else %}
+                  <i class="fas fa-shopping-bag"></i>
+                {% endif %}
+              </div>
+              
+              <div class="t-details">
+                <h4>{{ txn[2] }} <span style="font-size: 11px; color: var(--text-muted); background: rgba(255,255,255,0.1); padding: 3px 8px; border-radius: 6px; margin-left: 8px;">{{ txn[4] }}</span></h4>
+                <p>{{ txn[5] }}</p>
+              </div>
+            </div>
+            
+            <div class="t-amount" style="color:#ff4757;">- ₹{{ "{:,.2f}".format(txn[3]) }}</div>
+          </div>
+          {% else %}
+          <p style="color: var(--text-muted); text-align: center; padding: 30px;">No expenses logged yet. Click "New Expense" to get started!</p>
+          {% endfor %}
+          
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</main>
+
+</div>
+<div id="expenseModal" style="
+position: fixed;
+bottom: 20px;
+right: 20px;
+width: 420px;
+max-width: 95%;
+display: none;
+z-index: 9999;
+">
+  <div style="
+      background: rgba(26, 42, 34, 0.96);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(230, 175, 46, 0.2);
+      border-top: 3px solid #e6af2e;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+  ">
+    
+    <div style="
+        background: linear-gradient(90deg,#e6af2e,#d49511);
+        color: #0d1210;
+        padding: 14px 18px;
+        font-weight: 700;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+    ">
+        🤖 Add Expense Here
+        <span onclick="closeExpenseModal()" style="cursor:pointer;">✖</span>
+    </div>
+
+    <form action="/add-expense" method="POST" style="
+        display:flex;
+        flex-direction:column;
+        gap:14px;
+        padding:20px;
+    ">
+      <input type="text" name="title" placeholder="What did you spend on?" required style="
+          padding:12px;
+          border:none;
+          border-radius:10px;
+          background:rgba(255,255,255,0.08);
+          color:white;
+          outline:none;
+      ">
+<select name="category" required 
+onfocus="this.style.borderColor='#e6af2e'; this.style.boxShadow='0 0 12px rgba(230,175,46,0.25)'"
+onblur="this.style.borderColor='rgba(230,175,46,0.25)'; this.style.boxShadow='inset 0 0 10px rgba(0,0,0,0.25)'"
+style="
+    padding: 12px;
+    border: 1px solid rgba(230,175,46,0.25);
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(26,42,34,0.95), rgba(18,28,22,0.95));
+    color: #f5f5f5;
+    outline: none;
+    font-weight: 500;
+    transition: 0.3s ease;
+    appearance: none;
+">
+    <option value="" style="background:#1a2a22; color:#f5f5f5;">Choose category</option>
+    <option style="background:#1a2a22; color:#f5f5f5;">Food</option>
+    <option style="background:#1a2a22; color:#f5f5f5;">Travel</option>
+    <option style="background:#1a2a22; color:#f5f5f5;">Shopping</option>
+    <option style="background:#1a2a22; color:#f5f5f5;">Other</option>
+</select>
+
+      <input type="number" name="amount" placeholder="Amount ₹" required style="
+          padding:12px;
+          border:none;
+          border-radius:10px;
+          background:rgba(255,255,255,0.08);
+          color:white;
+          outline:none;
+      ">
+
+      <input type="date" name="date" required style="
+          padding:12px;
+          border:none;
+          border-radius:10px;
+          background:rgba(255,255,255,0.08);
+          color:white;
+          outline:none;
+          color-scheme: dark;
+      ">
+
+      <button type="submit" style="
+          padding:13px;
+          border:none;
+          border-radius:10px;
+          background:linear-gradient(90deg,#e6af2e,#d49511);
+          color:#0d1210;
+          font-weight:700;
+          cursor:pointer;
+      ">
+          Save Expense
+      </button>
+    </form>
+  </div>
+</div>
+<script>
+function openExpenseModal() {
+    document.getElementById("expenseModal").style.display = "block";
+}
+function closeExpenseModal() {
+    document.getElementById("expenseModal").style.display = "none";
+}
+</script>
+</body>
+</html>

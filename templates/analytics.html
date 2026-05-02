@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analytics - SmartExpense AI</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+:root {
+  --bg-main: #0d1210;
+  --bg-secondary: #1a2a22;
+  --accent-gold: #e6af2e;
+  --accent-gold-light: #f5d061;
+  --text-main: #ffffff;
+  --text-muted: #a8b3ac;
+  --card-bg: rgba(26, 42, 34, 0.5);
+  --card-border: rgba(230, 175, 46, 0.15);
+  --danger: #ff4757;
+}
+
+* { 
+  margin: 0; 
+  padding: 0; 
+  box-sizing: border-box; 
+  font-family: 'Poppins', sans-serif; 
+}
+
+/* UPDATED BACKGROUND WITH ddd.jpg */
+body {
+  background-color: var(--bg-main);
+  background-image: linear-gradient(135deg, rgba(13, 18, 16, 0.95) 0%, rgba(13, 18, 16, 0.85) 100%), 
+                    url("{{ url_for('static', filename='images/ddd.jpg') }}");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  color: var(--text-main);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* SUBTLE DOT PATTERN */
+body::before {
+  content: "";
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+  z-index: -1;
+}
+
+/* LAYOUT & SIDEBAR (Matches Dashboard) */
+.layout { display: flex; }
+
+.sidebar {
+  width: 260px; height: 100vh;
+  background: rgba(13, 18, 16, 0.7); 
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 30px 20px; position: fixed; left: 0; top: 0;
+  display: flex; flex-direction: column;
+  z-index: 20;
+}
+
+.sidebar .logo {
+  font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 24px;
+  margin-bottom: 50px; padding-left: 10px;
+  background: linear-gradient(90deg, var(--accent-gold-light), var(--accent-gold));
+  background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  display: flex; align-items: center; gap: 10px;
+}
+
+.nav-item {
+  display: flex; align-items: center; gap: 15px;
+  padding: 14px 20px; margin-bottom: 10px; border-radius: 12px;
+  color: var(--text-muted); text-decoration: none;
+  transition: all 0.3s ease; font-weight: 500;
+}
+
+.nav-item i { font-size: 18px; width: 20px; text-align: center; }
+.nav-item:hover { background: rgba(230, 175, 46, 0.08); color: var(--accent-gold-light); transform: translateX(6px); }
+.nav-item.active {
+  background: linear-gradient(90deg, var(--accent-gold), #d49511);
+  color: var(--bg-main); font-weight: 600;
+  box-shadow: 0 4px 15px rgba(230, 175, 46, 0.2);
+}
+
+/* MAIN CONTENT */
+.main { margin-left: 260px; width: calc(100% - 260px); }
+
+/* HEADER */
+header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 20px 40px; background: rgba(13, 18, 16, 0.5);
+  backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  position: sticky; top: 0; z-index: 10;
+}
+
+/* CONTAINER & CARD */
+.container { max-width: 1000px; margin: auto; padding: 40px; animation: fade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.page-header h1 { font-family: 'Montserrat', sans-serif; font-size: 32px; font-weight: 800; margin-bottom: 5px; }
+.page-header p { color: var(--text-muted); margin-bottom: 30px; }
+
+.card {
+  background: var(--card-bg); 
+  backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.08); padding: 40px;
+  border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  transition: 0.3s;
+}
+
+.card:hover {
+  border-color: rgba(230, 175, 46, 0.3);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+}
+
+/* RADIO BUTTON TOGGLES */
+.graph-controls {
+  display: flex; gap: 15px; margin-bottom: 30px;
+  background: rgba(0,0,0,0.3); padding: 8px; border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.05); width: fit-content;
+}
+
+.graph-controls input[type="radio"] { display: none; }
+
+.graph-controls label {
+  padding: 10px 20px; border-radius: 8px; cursor: pointer;
+  font-size: 14px; font-weight: 500; color: var(--text-muted);
+  transition: all 0.3s ease; display: flex; align-items: center; gap: 8px;
+}
+
+.graph-controls label:hover {
+  color: #ffffff;
+}
+
+.graph-controls input[type="radio"]:checked + label {
+  background: rgba(230, 175, 46, 0.15); color: var(--accent-gold-light);
+  border: 1px solid rgba(230, 175, 46, 0.3);
+  box-shadow: 0 0 15px rgba(230, 175, 46, 0.1);
+}
+
+/* CHART CONTAINER */
+.chart-container {
+  position: relative; height: 400px; width: 100%;
+  display: flex; justify-content: center; align-items: center;
+}
+
+@keyframes fade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* RESPONSIVE */
+@media(max-width: 768px) {
+  .sidebar { width: 80px; padding: 20px 10px; }
+  .main { margin-left: 80px; width: calc(100% - 80px); }
+  .sidebar .logo span, .nav-item span { display: none; }
+  .nav-item { justify-content: center; padding: 14px 0; }
+  .graph-controls { flex-direction: column; width: 100%; }
+  header { padding: 15px 20px; }
+  .container { padding: 25px; }
+}
+</style>
+</head>
+
+<body>
+<div class="layout">
+
+<aside class="sidebar">
+  <div class="logo"><i class="fas fa-wallet"></i> <span>SE AI</span></div>
+  <nav>
+    <a href="/dashboard" class="nav-item"><i class="fas fa-home"></i> <span>Dashboard</span></a>
+    <a href="/budget" class="nav-item"><i class="fas fa-chart-pie"></i> <span>Budget</span></a>
+    <a href="/analytics" class="nav-item active"><i class="fas fa-chart-line"></i> <span>Analytics</span></a>
+    <a href="/settings" class="nav-item"><i class="fas fa-cog"></i> <span>Settings</span></a>
+  </nav>
+</aside>
+
+<div class="main">
+  <header>
+    <div style="font-weight: 600; font-size: 18px; color: var(--text-muted);">Analytics</div>
+    <a href="/logout" style="color:var(--text-muted); text-decoration:none; display: flex; align-items: center; gap: 8px; transition: 0.3s;" onmouseover="this.style.color='#ff4757'" onmouseout="this.style.color='var(--text-muted)'">
+      <i class="fas fa-sign-out-alt"></i> Logout
+    </a>
+  </header>
+
+  <div class="container">
+    <div class="page-header">
+      <h1>Spending Analytics</h1>
+      <p>Visualise your financial habits to make smarter decisions.</p>
+    </div>
+
+    <div class="card">
+      <div style="display:flex; gap:10px; margin-bottom:20px; align-items:center;">
+  <input type="date" id="fromDate" style="padding:8px; border-radius:6px;">
+  <input type="date" id="toDate" style="padding:8px; border-radius:6px;">
+  
+  <button onclick="applyFilter()" style="
+    padding:8px 16px;
+    background:#e6af2e;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    font-weight:600;">
+    Apply
+  </button>
+</div>
+      <div class="graph-controls">
+<input type="radio" id="bar" name="chartType">
+<label for="bar" onclick="changeChart('bar')">
+  <i class="fas fa-chart-bar"></i> Bar Chart
+</label>
+
+<input type="radio" id="line" name="chartType">
+<label for="line" onclick="changeChart('line')">
+  <i class="fas fa-chart-line"></i> Line Chart
+</label>
+
+<input type="radio" id="pie" name="chartType" checked>
+<label for="pie" onclick="changeChart('pie')">
+  <i class="fas fa-chart-pie"></i> Pie Chart
+</label>
+</div>
+
+<div class="chart-container">
+  <img id="chartImage" src="/chart/pie" style="width:100%; max-width:500px;">
+</div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+let currentType = "pie";
+
+function changeChart(type){
+    currentType = type;
+    loadChart();
+}
+
+function applyFilter(){
+    loadChart();
+}
+function loadChart(){
+    const from = document.getElementById("fromDate").value;
+    const to = document.getElementById("toDate").value;
+
+    let url = "/chart/" + currentType;
+
+    if(from && to){
+        url += "?from=" + from + "&to=" + to;
+    }
+    url += (url.includes("?") ? "&" : "?") + "t=" + new Date().getTime();
+
+    document.getElementById("chartImage").src = url;
+}
+</script>
+
+</body>
+</html>

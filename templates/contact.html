@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - SmartExpense AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: #0d1210; background-image: linear-gradient(to right, rgba(13, 18, 16, 0.95) 0%, rgba(13, 18, 16, 0.8) 100%), url('/static/images/expensetrack.webp'); background-size: cover; background-position: center; background-attachment: fixed; color: #ffffff; line-height: 1.6; min-height: 100vh; }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 50px; background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255, 255, 255, 0.05); margin: 20px 40px; border-radius: 12px; position: sticky; top: 20px; z-index: 100; }
+        .logo { font-size: 24px; font-weight: 800; font-family: 'Montserrat', sans-serif; background: linear-gradient(90deg, #f5d061, #e6af2e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; } .logo span { color: #ffffff; -webkit-text-fill-color: #ffffff; }
+        nav ul { display: flex; list-style: none; align-items: center; } nav ul li { margin: 0 20px; } nav ul li a { text-decoration: none; color: #d1d5d3; font-weight: 500; font-size: 15px; transition: color 0.3s ease; } nav ul li a:hover, .active { color: #f5d061; }
+        .nav-btn { padding: 10px 24px; border-radius: 8px; background: linear-gradient(90deg, #e6af2e, #d49511); color: #0d1210 !important; font-weight: 600; margin-left: 20px; }
+        
+        .main-container { padding: 60px; max-width: 800px; margin: 0 auto; }
+        .page-title { font-family: 'Montserrat', sans-serif; font-size: 48px; font-weight: 900; margin-bottom: 10px; text-align: center; }
+        .subtitle { text-align: center; color: #a8b3ac; margin-bottom: 40px; }
+        
+        .contact-form { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); padding: 40px; border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-size: 14px; color: #d1d5d3; }
+        .form-group input, .form-group textarea { width: 100%; padding: 15px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: #fff; font-family: 'Poppins', sans-serif; transition: border-color 0.3s; }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: #f5d061; }
+        .submit-btn { width: 100%; padding: 15px; border-radius: 8px; background: linear-gradient(90deg, #e6af2e, #d49511); color: #0d1210; border: none; font-weight: 700; font-size: 16px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; margin-top: 10px; }
+        .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(230, 175, 46, 0.3); }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">Smart Expense <span>AI</span></div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/features">Features</a></li>
+                <li><a href="/contact" class="active">Contact</a></li>
+                <li><a href="/login" class="nav-btn">Get Started</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="main-container">
+        <h1 class="page-title">Get in Touch</h1>
+        <p class="subtitle">Have a question or need support? Drop us a message.</p>
+        
+        <form class="contact-form" action="/contact" method="POST">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" placeholder="John Doe" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="john@example.com" required>
+            </div>
+            <div class="form-group">
+                <label for="message">Your Message</label>
+                <textarea id="message" name="message" rows="5" placeholder="How can we help you?" required></textarea>
+            </div>
+            <button type="submit" class="submit-btn">Send Message</button>
+        </form>
+    </div>
+</body>
+</html>

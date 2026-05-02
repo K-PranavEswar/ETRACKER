@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - SmartExpense AI</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* BASE STYLES */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #0d1210;
+            background-image: linear-gradient(to right, rgba(13,18,16,0.95), rgba(13,18,16,0.8)),
+                              url("{{ url_for('static', filename='images/expensetrack.webp') }}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #ffffff;
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* GLASSMORPHISM NAVBAR (Matched exactly to home.html) */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 50px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            margin: 20px 40px;
+            border-radius: 12px;
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(90deg, #f5d061, #e6af2e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo span {
+            color: #ffffff;
+            -webkit-text-fill-color: #ffffff;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            align-items: center;
+        }
+
+        nav ul li {
+            margin: 0 20px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #d1d5d3;
+            font-weight: 500;
+            font-size: 15px;
+            transition: color 0.3s ease;
+        }
+
+        nav ul li a:hover, 
+        nav ul li a.active {
+            color: #f5d061; /* Highlights the current page link */
+        }
+
+        .nav-btn {
+            padding: 10px 24px;
+            border-radius: 8px;
+            background: linear-gradient(90deg, #e6af2e, #d49511);
+            color: #0d1210 !important;
+            font-weight: 600;
+            margin-left: 20px;
+            transition: all 0.3s ease;
+            border: 1px solid #f5d061;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(230, 175, 46, 0.3);
+        }
+
+        /* ABOUT PAGE CONTENT STYLES */
+        .main-container {
+            padding: 60px 20px;
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .page-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 48px;
+            font-weight: 900;
+            margin-bottom: 20px;
+            text-align: center;
+            background: linear-gradient(to right, #f5d061, #ffffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #a8b3ac;
+            margin-bottom: 40px;
+            text-align: center;
+            font-weight: 300;
+        }
+
+        .content-box {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            transition: all 0.4s ease;
+        }
+
+        .content-box:hover {
+            border-color: rgba(245, 208, 97, 0.4);
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        h2 {
+            color: #f5d061;
+            margin-bottom: 15px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        p, li {
+            color: #a8b3ac;
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        /* RESPONSIVE DESIGN (Matched to home.html) */
+        @media(max-width: 768px) {
+            header {
+                flex-direction: column;
+                padding: 20px;
+                border-radius: 0;
+                margin: 0;
+            }
+
+            nav ul {
+                margin-top: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+            }
+
+            nav ul li {
+                margin: 5px;
+            }
+
+            .nav-btn {
+                margin-left: 0;
+            }
+
+            .page-title {
+                font-size: 34px;
+            }
+            
+            .main-container {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">Smart Expense <span>AI</span></div>
+
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('about') }}" class="active">About</a></li>
+            <li><a href="{{ url_for('features') }}">Features</a></li>
+            <li><a href="{{ url_for('contact') }}">Contact</a></li>
+            <li><a href="{{ url_for('login') }}" class="nav-btn">Get Started</a></li>
+        </ul>
+    </nav>
+</header>
+
+<div class="main-container">
+
+    <h1 class="page-title">About SmartExpense AI</h1>
+
+    <p class="subtitle">
+        SmartExpense AI is an intelligent expense tracking system designed to help users manage and understand their finances more effectively.
+    </p>
+
+    <div class="content-box">
+        <h2>💡 What is this App?</h2>
+        <p>
+            SmartExpense AI is a web-based financial management system built using Flask.
+            It allows users to track expenses, monitor budgets, and gain insights into their spending behavior.
+        </p>
+    </div>
+
+    <div class="content-box">
+        <h2>🎯 Purpose</h2>
+        <ul>
+            <li>Track daily and monthly expenses</li>
+            <li>Monitor and control spending</li>
+            <li>Improve financial awareness</li>
+            <li>Provide smart financial insights</li>
+        </ul>
+    </div>
+
+    <div class="content-box">
+        <h2>⚙️ Features</h2>
+        <ul>
+            <li>Expense tracking system</li>
+            <li>Budget management</li>
+            <li>Analytics dashboard</li>
+            <li>Secure login system</li>
+            <li>CSV export reports</li>
+        </ul>
+    </div>
+
+    <div class="content-box">
+        <h2>🚀 Future Scope</h2>
+        <ul>
+            <li>AI-based spending suggestions</li>
+            <li>Mobile app integration</li>
+            <li>Smart notifications</li>
+            <li>Advanced analytics & predictions</li>
+            <li>Cloud sync across devices</li>
+        </ul>
+    </div>
+
+    <div class="content-box">
+        <h2>🌍 Why this App?</h2>
+        <p>
+            Managing money is essential in modern life. This app helps users gain control over their finances,
+            reduce unnecessary spending, and build better financial habits.
+        </p>
+    </div>
+
+</div>
+
+</body>
+</html>

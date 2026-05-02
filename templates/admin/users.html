@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Users - SmartExpense AI</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* BASE STYLES */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* ELEGANT DARK BACKGROUND */
+        body {
+            background: radial-gradient(circle at top left, #1a2a22 0%, #060807 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+        }
+
+        /* SUBTLE DOT PATTERN OVERLAY */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            z-index: -1;
+        }
+
+        /* --- STATIC SIDEBAR --- */
+        .sidebar {
+            width: 260px;
+            background: rgba(10, 14, 12, 0.7);
+            border-right: 1px solid rgba(230, 175, 46, 0.1);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            z-index: 200;
+            box-shadow: 5px 0 30px rgba(0,0,0,0.3);
+        }
+
+        .sidebar .logo {
+            margin-bottom: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: 800;
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(90deg, #f5d061, #e6af2e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .sidebar .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .admin-badge {
+            background: #e6af2e;
+            color: #000 !important;
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            font-weight: 700;
+            -webkit-text-fill-color: black !important;
+        }
+
+        /* --- PREMIUM HOVER EFFECTS FOR LINKS --- */
+        .nav-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .nav-links a {
+            color: #8b9991;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 14px 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid transparent;
+        }
+
+        /* Sliding Background Effect */
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(230, 175, 46, 0.1), transparent);
+            transition: left 0.5s ease;
+            z-index: -1;
+        }
+
+        .nav-links a:hover::before {
+            left: 100%;
+        }
+
+        .nav-links a:hover {
+            color: #f5d061;
+            transform: translateX(8px) scale(1.02);
+            background: rgba(230, 175, 46, 0.05);
+            border-color: rgba(230, 175, 46, 0.2);
+            box-shadow: 0 4px 20px rgba(230, 175, 46, 0.08);
+        }
+
+        .nav-links a.active {
+            background: linear-gradient(90deg, rgba(230, 175, 46, 0.15), rgba(230, 175, 46, 0.05));
+            color: #f5d061;
+            border: 1px solid rgba(230, 175, 46, 0.3);
+            box-shadow: 0 0 20px rgba(230, 175, 46, 0.15);
+            font-weight: 600;
+        }
+
+        .nav-links a svg {
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .nav-links a:hover svg {
+            transform: scale(1.2) rotate(-5deg);
+            stroke: #f5d061;
+        }
+
+        /* --- MAIN CONTENT AREA --- */
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: rgba(13, 18, 16, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 2px solid #e6af2e;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header a.logout-btn {
+            color: #d1d5d3;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 8px 20px;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        header a.logout-btn:hover {
+            background: rgba(231, 76, 60, 0.1);
+            border-color: #e74c3c;
+            color: #e74c3c;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 40px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-header {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 25px;
+            letter-spacing: 0.5px;
+        }
+
+        .panel {
+            background: rgba(26, 42, 34, 0.5);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(230, 175, 46, 0.15);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow-x: auto;
+        }
+
+        /* --- MODERN TABLE STYLES --- */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 10px; /* Creates gaps between rows */
+        }
+
+        th {
+            color: #a8b3ac;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0 20px 10px 20px;
+            border: none;
+            text-align: left;
+        }
+
+        td {
+            padding: 18px 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: #d1d5d3;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        /* Rounded corners for row ends */
+        td:first-child {
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px 0 0 10px;
+            color: #ffffff;
+        }
+        
+        td:last-child {
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 0 10px 10px 0;
+        }
+
+        /* Row hover effect */
+        tr {
+            transition: transform 0.2s ease;
+        }
+        
+        tr:hover td {
+            background: rgba(230, 175, 46, 0.05);
+            border-color: rgba(230, 175, 46, 0.2);
+        }
+
+        tr:hover td:first-child { color: #f5d061; }
+
+        .val-expense {
+            color: #e74c3c;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 0.5px;
+        }
+
+        /* --- BUTTONS --- */
+        .action-btns {
+            display: flex;
+            gap: 12px;
+        }
+
+        button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-view {
+            background: rgba(46, 204, 113, 0.1);
+            color: #2ecc71;
+            border: 1px solid rgba(46, 204, 113, 0.2);
+        }
+
+        .btn-view:hover {
+            background: rgba(46, 204, 113, 0.2);
+            box-shadow: 0 0 12px rgba(46, 204, 113, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-delete {
+            background: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+            border: 1px solid rgba(231, 76, 60, 0.2);
+        }
+
+        .btn-delete:hover {
+            background: rgba(231, 76, 60, 0.2);
+            box-shadow: 0 0 12px rgba(231, 76, 60, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .main-content { margin-left: 0; }
+            header { padding: 15px 25px; }
+            .container { padding: 20px; }
+            .panel { padding: 15px; }
+            th, td { padding: 12px 10px; font-size: 13px; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="logo">
+            SmartExpense <span class="admin-badge">Admin</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="/admin-dashboard">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                Dashboard
+            </a></li>
+            <li><a href="/admin/users" class="active">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                Users
+            </a></li>
+            <li><a href="/admin/settings">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                Settings
+            </a></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <header>
+            <div class="header-title" style="font-weight: 600; color: #d1d5d3;">User Management</div>
+            <a href="/logout" class="logout-btn">Secure Logout</a>
+        </header>
+
+        <div class="container">
+            <h1 class="section-header">All Registered Users</h1>
+
+            <div class="panel">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Email</th>
+                            <th>Joined</th>
+                            <th>Total Expense</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td><strong>{{ user.username }}</strong></td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.joined_on }}</td>
+                            <td class="val-expense">₹{{ user.total_expense or 0 }}</td>
+                            <td>
+                                <div class="action-btns">
+                                    <button class="btn-view" onclick="window.location.href='/admin/user/{{ user.id }}'">
+                                        View
+                                    </button>
+                                    <button class="btn-delete" onclick="if(confirm('Delete this user?')) window.location.href='/delete-user/{{ user.id }}'">
+                                        Delete
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

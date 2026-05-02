@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings - SmartExpense AI</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+:root {
+  --bg-main: #0d1210;
+  --bg-secondary: #1a2a22;
+  --accent-gold: #e6af2e;
+  --accent-gold-light: #f5d061;
+  --text-main: #ffffff;
+  --text-muted: #a8b3ac;
+  --card-bg: rgba(26, 42, 34, 0.5);
+  --danger: #ff4757;
+  --success: #2ed573;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+body {
+  background-color: var(--bg-main);
+  background-image: linear-gradient(135deg, rgba(13, 18, 16, 0.95) 0%, rgba(13, 18, 16, 0.85) 100%), 
+                    url("{{ url_for('static', filename='images/ddd.jpg') }}");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  color: var(--text-main);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* SIDEBAR & LAYOUT */
+.layout { display: flex; }
+
+.sidebar {
+  width: 260px; height: 100vh;
+  background: rgba(13, 18, 16, 0.7);
+  backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 30px 20px; position: fixed; left: 0; top: 0;
+  display: flex; flex-direction: column; z-index: 20;
+}
+
+.sidebar .logo {
+  font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 24px;
+  margin-bottom: 50px; padding-left: 10px;
+  background: linear-gradient(90deg, var(--accent-gold-light), var(--accent-gold));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  display: flex; align-items: center; gap: 10px;
+}
+
+.nav-item {
+  display: flex; align-items: center; gap: 15px; padding: 14px 20px;
+  margin-bottom: 10px; border-radius: 12px; color: var(--text-muted);
+  text-decoration: none; transition: all 0.3s ease; font-weight: 500;
+}
+
+.nav-item i { font-size: 18px; width: 20px; text-align: center; }
+.nav-item:hover { background: rgba(230, 175, 46, 0.08); color: var(--accent-gold-light); transform: translateX(6px); }
+.nav-item.active {
+  background: linear-gradient(90deg, var(--accent-gold), #d49511);
+  color: var(--bg-main); font-weight: 600;
+  box-shadow: 0 4px 15px rgba(230, 175, 46, 0.2);
+}
+
+/* MAIN CONTENT & HEADER */
+.main { margin-left: 260px; width: calc(100% - 260px); }
+
+header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 20px 40px; background: rgba(13, 18, 16, 0.5);
+  backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05); position: sticky; top: 0; z-index: 10;
+}
+
+.search-bar {
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+  padding: 10px 20px; border-radius: 20px; color: white; display: flex; align-items: center; gap: 10px;
+}
+.search-bar input { background: transparent; border: none; color: white; outline: none; font-family: 'Poppins'; }
+.user-profile a { color: var(--text-muted); text-decoration: none; transition: 0.3s; display: flex; align-items: center; gap: 8px;}
+.user-profile a:hover { color: var(--danger); }
+
+.container { max-width: 1400px; margin: auto; padding: 40px; }
+
+/* SETTINGS SPECIFIC CSS */
+.settings-header { margin-bottom: 30px; }
+.settings-header h1 { font-family: 'Montserrat', sans-serif; font-size: 32px; font-weight: 800; }
+
+.tab-switch {
+  display: flex; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px; padding: 6px; margin-bottom: 30px; max-width: 600px;
+}
+.tab-btn {
+  flex: 1; padding: 14px; border: none; background: transparent; color: var(--text-muted);
+  border-radius: 12px; cursor: pointer; font-family: 'Poppins'; font-weight: 500; font-size: 14px;
+  transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.tab-btn:hover { color: white; background: rgba(255,255,255,0.05); }
+.tab-btn.active { background: linear-gradient(90deg, var(--accent-gold), #d49511); color: var(--bg-main); font-weight: 600; box-shadow: 0 4px 15px rgba(230, 175, 46, 0.2); }
+
+.card { background: var(--card-bg); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); padding: 30px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+.form-group { margin-bottom: 25px; }
+.form-group label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; font-weight: 600; letter-spacing: 1px; }
+.form-control { width: 100%; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); color: white; padding: 15px 20px; border-radius: 12px; font-family: 'Poppins'; font-size: 15px; outline: none; transition: 0.3s; }
+.form-control:focus { border-color: var(--accent-gold-light); box-shadow: 0 0 15px rgba(230, 175, 46, 0.15); }
+
+.btn-primary { background: linear-gradient(90deg, var(--accent-gold), #d49511); color: var(--bg-main); padding: 15px; border-radius: 12px; border: none; font-family: 'Poppins'; font-weight: 600; font-size: 16px; cursor: pointer; width: 100%; transition: 0.3s; display: flex; justify-content: center; gap: 8px; align-items: center;}
+.btn-primary:hover { box-shadow: 0 6px 20px rgba(230, 175, 46, 0.3); transform: translateY(-2px); }
+
+.alert-success { background: rgba(46, 213, 115, 0.1); border: 1px solid rgba(46, 213, 115, 0.3); color: var(--success); padding: 15px 20px; border-radius: 12px; margin-top: 25px; display: flex; align-items: center; gap: 12px; font-weight: 500; font-size: 14px; }
+
+.settings-item { display: flex; justify-content: space-between; align-items: center; padding: 18px 20px; background: rgba(0,0,0,0.2); border-radius: 12px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.03); transition: 0.3s; }
+.settings-item:hover { background: rgba(255,255,255,0.05); border-color: rgba(230, 175, 46, 0.2); }
+.settings-item span { display: flex; align-items: center; gap: 12px; font-weight: 500; }
+.settings-item i { color: var(--accent-gold); font-size: 18px; width: 20px; text-align: center; }
+.settings-select { background: rgba(0,0,0,0.5); border: 1px solid rgba(230, 175, 46, 0.3); color: white; padding: 8px 15px; border-radius: 8px; font-family: 'Poppins'; outline: none; cursor: pointer; transition: 0.3s;}
+.danger { color: var(--danger) !important; cursor: pointer; }
+.danger i { color: var(--danger) !important; }
+</style>
+</head>
+<body>
+
+<div class="layout">
+  
+  <aside class="sidebar">
+    <div class="logo">
+      <i class="fas fa-wallet"></i> <span>SE AI</span>
+    </div>
+    <nav>
+      <a href="/dashboard" class="nav-item"><i class="fas fa-home"></i> <span>Dashboard</span></a>
+      <a href="/budget" class="nav-item"><i class="fas fa-chart-pie"></i> <span>Budget</span></a>
+      <a href="/analytics" class="nav-item"><i class="fas fa-chart-line"></i> <span>Analytics</span></a>
+      <a href="/settings" class="nav-item active"><i class="fas fa-cog"></i> <span>Settings</span></a>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <header>
+      <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search transactions...">
+      </div>
+      <div class="user-profile">
+        <a href="/logout" title="Logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      </div>
+    </header>
+
+    <div class="container" id="page">
+      <div class="settings-header">
+        <h1>Account <span>Settings</span></h1>
+      </div>
+
+      <div class="tab-switch">
+        <button class="tab-btn active" onclick="showTab('budgetTab', this)"><i class="fas fa-bullseye"></i> Monthly Budget</button>
+        <button class="tab-btn" onclick="showTab('incomeTab', this)"><i class="fas fa-money-bill-wave"></i> Add Income</button>
+        <button class="tab-btn" onclick="showTab('prefsTab', this)"><i class="fas fa-sliders-h"></i> Preferences</button>
+      </div>
+
+      <div id="budgetTab" class="tab-content">
+        <div class="card" style="max-width: 600px;">
+          <h3 style="margin-bottom: 25px; font-weight: 600;">Update Monthly Limit</h3>
+          
+          <form method="POST" action="/settings">
+            <input type="hidden" name="form_type" value="budget">
+            
+            <div class="form-group">
+              <label>Budget Amount ({{ session.get('currency', 'INR') }})</label>
+              <input type="number" name="budget" class="form-control" value="{{ current_budget }}" placeholder="e.g. 15000" required>
+            </div>
+            
+            <button type="submit" class="btn-primary"><i class="fas fa-save"></i> Save Budget</button>
+          </form>
+          
+          {% if success %}
+          <div class="alert-success fade"><i class="fas fa-check-circle"></i> Action successful!</div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div id="incomeTab" class="tab-content" style="display:none;">
+        <div class="card" style="max-width: 600px;">
+          <h3 style="margin-bottom: 25px; font-weight: 600;">Add Bank Balance / Income</h3>
+          
+          <form method="POST" action="/settings">
+            <input type="hidden" name="form_type" value="income">
+            
+            <div class="form-group">
+              <label>Income Amount ({{ session.get('currency', 'INR') }})</label>
+              <input type="number" name="income" class="form-control" placeholder="Enter amount..." required>
+            </div>
+            
+            <button type="submit" class="btn-primary"><i class="fas fa-plus-circle"></i> Add to Balance</button>
+          </form>
+        </div>
+      </div>
+
+      <div id="prefsTab" class="tab-content" style="display:none;">
+        <div class="card" style="max-width: 800px;">
+          
+          <div class="form-group">
+            <label>Display Currency</label>
+            <div class="settings-item">
+              <span><i class="fas fa-coins"></i> App Currency</span>
+              <form action="/update-currency" method="POST" id="currencyForm">
+                <select class="settings-select" name="currency" onchange="document.getElementById('currencyForm').submit();">
+                  <option value="INR" {% if user_currency == 'INR' %}selected{% endif %}>INR (₹)</option>
+                  <option value="USD" {% if user_currency == 'USD' %}selected{% endif %}>USD ($)</option>
+                  <option value="EUR" {% if user_currency == 'EUR' %}selected{% endif %}>EUR (€)</option>
+                </select>
+              </form>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-top: 30px;">
+            <label>Data Management</label>
+            <a href="/export-csv" style="text-decoration: none; color: inherit;">
+              <div class="settings-item" style="cursor: pointer;">
+                <span><i class="fas fa-file-export"></i> Export Data (CSV)</span>
+                <i class="fas fa-chevron-right" style="font-size: 14px; color: var(--text-muted);"></i>
+              </div>
+            </a>
+          
+            <form action="/reset-data" method="POST" onsubmit="return confirm('Are you sure? This will delete ALL your data permanently!');">
+  <button type="submit" class="settings-item danger" style="width:100%; border:none; background:none;">
+    <span class="danger"><i class="fas fa-trash-alt"></i> Reset All Data</span>
+  </button>
+</form>
+{% if reset_success %}
+<div class="alert-success">
+  <i class="fas fa-check-circle"></i> All data has been reset successfully!
+</div>
+{% endif %}
+          </div>
+
+        </div>
+        <div class="form-group" style="margin-top: 30px;">
+  <label>Security</label>
+
+  <form method="POST" action="/change-password">
+    
+    <div class="form-group">
+      <label>Current Password</label>
+      <input type="password" name="current_password" class="form-control" required>
+    </div>
+
+    <div class="form-group">
+      <label>New Password</label>
+      <input type="password" name="new_password" class="form-control" required>
+    </div>
+
+    <div class="form-group">
+      <label>Confirm New Password</label>
+      <input type="password" name="confirm_password" class="form-control" required>
+    </div>
+
+    <button type="submit" class="btn-primary">
+      <i class="fas fa-lock"></i> Change Password
+    </button>
+  </form>
+
+  {% if password_success %}
+  <div class="alert-success">
+    <i class="fas fa-check-circle"></i> Password updated successfully!
+  </div>
+  {% endif %}
+
+  {% if password_error %}
+  <div class="alert-success" style="color:red;">
+    <i class="fas fa-times-circle"></i> {{ password_error }}
+  </div>
+  {% endif %}
+</div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script>
+function showTab(tabId, el){
+  document.querySelectorAll(".tab-content").forEach(t => t.style.display="none");
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  
+  document.getElementById(tabId).style.display="block";
+  el.classList.add("active");
+}
+</script>
+
+</body>
+</html>

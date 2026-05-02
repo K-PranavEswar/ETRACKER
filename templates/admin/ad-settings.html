@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Settings - SmartExpense AI</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* BASE STYLES */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* ELEGANT DARK BACKGROUND */
+        body {
+            background: radial-gradient(circle at top left, #1a2a22 0%, #060807 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+        }
+
+        /* SUBTLE DOT PATTERN OVERLAY */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            z-index: -1;
+        }
+
+        /* --- STATIC SIDEBAR --- */
+        .sidebar {
+            width: 260px;
+            background: rgba(10, 14, 12, 0.7);
+            border-right: 1px solid rgba(230, 175, 46, 0.1);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            z-index: 200;
+            box-shadow: 5px 0 30px rgba(0,0,0,0.3);
+        }
+
+        .sidebar .logo {
+            margin-bottom: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: 800;
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(90deg, #f5d061, #e6af2e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .sidebar .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .admin-badge {
+            background: #e6af2e;
+            color: #000 !important;
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            font-weight: 700;
+            -webkit-text-fill-color: black !important;
+        }
+
+        /* --- PREMIUM HOVER EFFECTS FOR LINKS --- */
+        .nav-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .nav-links a {
+            color: #8b9991;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 14px 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid transparent;
+        }
+
+        /* Sliding Background Effect */
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(230, 175, 46, 0.1), transparent);
+            transition: left 0.5s ease;
+            z-index: -1;
+        }
+
+        .nav-links a:hover::before {
+            left: 100%;
+        }
+
+        .nav-links a:hover {
+            color: #f5d061;
+            transform: translateX(8px) scale(1.02);
+            background: rgba(230, 175, 46, 0.05);
+            border-color: rgba(230, 175, 46, 0.2);
+            box-shadow: 0 4px 20px rgba(230, 175, 46, 0.08);
+        }
+
+        .nav-links a.active {
+            background: linear-gradient(90deg, rgba(230, 175, 46, 0.15), rgba(230, 175, 46, 0.05));
+            color: #f5d061;
+            border: 1px solid rgba(230, 175, 46, 0.3);
+            box-shadow: 0 0 20px rgba(230, 175, 46, 0.15);
+            font-weight: 600;
+        }
+
+        .nav-links a svg {
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .nav-links a:hover svg {
+            transform: scale(1.2) rotate(-5deg);
+            stroke: #f5d061;
+        }
+
+        /* --- MAIN CONTENT AREA --- */
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: rgba(13, 18, 16, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 2px solid #e6af2e;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header a.logout-btn {
+            color: #d1d5d3;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 8px 20px;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        header a.logout-btn:hover {
+            background: rgba(231, 76, 60, 0.1);
+            border-color: #e74c3c;
+            color: #e74c3c;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 40px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- SETTINGS BOX (MATCHING PANEL STYLE) --- */
+        .settings-box {
+            background: rgba(26, 42, 34, 0.5);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(230, 175, 46, 0.15);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .settings-box h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 28px;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .settings-box .sub {
+            color: #a8b3ac;
+            font-size: 14px;
+            margin-bottom: 35px;
+        }
+
+        /* --- THEME CARDS --- */
+        .theme-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 35px;
+        }
+
+        .theme-option {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .theme-option input[type="radio"] {
+            display: none;
+        }
+
+        .theme-card-inner {
+            background: rgba(0, 0, 0, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.05);
+            border-radius: 18px;
+            padding: 20px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .theme-option:hover .theme-card-inner {
+            transform: translateY(-5px);
+            border-color: rgba(230, 175, 46, 0.4);
+        }
+
+        /* Active State */
+        .theme-option input[type="radio"]:checked + .theme-card-inner {
+            border-color: #f5d061;
+            background: rgba(230, 175, 46, 0.05);
+            box-shadow: 0 10px 30px rgba(230, 175, 46, 0.15);
+        }
+
+        .theme-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .check-circle {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid #a8b3ac;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+        }
+
+        .theme-option input[type="radio"]:checked + .theme-card-inner .check-circle {
+            border-color: #f5d061;
+            background: #f5d061;
+        }
+
+        .check-circle::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background: #000;
+            border-radius: 50%;
+            opacity: 0;
+            transform: scale(0);
+            transition: 0.3s;
+        }
+
+        .theme-option input[type="radio"]:checked + .theme-card-inner .check-circle::after {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .preview {
+            height: 120px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Mock UI inside preview */
+        .preview::before {
+            content: '';
+            position: absolute;
+            top: 15px; left: 15px; right: 15px; height: 10px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .preview::after {
+            content: '';
+            position: absolute;
+            top: 35px; left: 15px; width: 60%; height: 8px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .preview.dark-preview {
+            background: linear-gradient(135deg, #111827, #0d1210);
+        }
+
+        .preview.light-preview {
+            background: linear-gradient(135deg, #f3f4f6, #ffffff);
+            border-color: rgba(0,0,0,0.1);
+        }
+        .preview.light-preview::before { background: rgba(0, 0, 0, 0.1); }
+        .preview.light-preview::after { background: rgba(0, 0, 0, 0.05); }
+
+        /* --- TERMS & BUTTON --- */
+        .terms {
+            line-height: 1.8;
+            color: #a8b3ac;
+            font-size: 13px;
+            background: rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .terms strong {
+            color: #ffffff;
+            font-size: 14px;
+        }
+
+        .btn-save {
+            background: linear-gradient(135deg, #f5d061, #e6af2e);
+            color: #000;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(230, 175, 46, 0.2);
+        }
+
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(230, 175, 46, 0.4);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .main-content { margin-left: 0; }
+            header { padding: 15px 25px; }
+            .container { padding: 20px; }
+            .settings-box { padding: 25px; }
+        }
+    </style>
+</head>
+<body class="{{ theme if theme else 'dark' }}">
+
+    <aside class="sidebar">
+        <div class="logo">
+            SmartExpense <span class="admin-badge">Admin</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="/admin-dashboard">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                Dashboard
+            </a></li>
+            <li><a href="/admin/users">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                Users
+            </a></li>
+            <li><a href="/admin/settings" class="active">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                Settings
+            </a></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <header>
+            <div style="font-weight: 600; color: #d1d5d3;">Platform Settings</div>
+            <a href="/logout" class="logout-btn">Secure Logout</a>
+        </header>
+
+        <div class="container">
+            <div class="settings-box">
+                <h1>Appearance Settings</h1>
+                <p class="sub">Customize the global admin interface experience.</p>
+
+                <form method="POST" action="/admin/settings/save">
+                    <div class="theme-cards">
+                        
+                        <label class="theme-option">
+                            <input type="radio" name="theme" value="dark" {% if theme == 'dark' or not theme %}checked{% endif %}>
+                            <div class="theme-card-inner">
+                                <div class="theme-header">
+                                    <span>Night Theme</span>
+                                    <div class="check-circle"></div>
+                                </div>
+                                <div class="preview dark-preview"></div>
+                            </div>
+                        </label>
+
+                        <label class="theme-option">
+                            <input type="radio" name="theme" value="light" {% if theme == 'light' %}checked{% endif %}>
+                            <div class="theme-card-inner">
+                                <div class="theme-header">
+                                    <span>Day Theme</span>
+                                    <div class="check-circle"></div>
+                                </div>
+                                <div class="preview light-preview"></div>
+                            </div>
+                        </label>
+
+                    </div>
+
+                    <div class="terms">
+                        <strong>Policy & Agreement</strong><br>
+                        Theme changes apply across the complete admin overview including dashboard, users, statements, analytics, and settings pages. The selected appearance is stored globally and reflected instantly after saving.
+                    </div>
+
+                    <button class="btn-save" type="submit">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                            <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                            <polyline points="7 3 7 8 15 8"></polyline>
+                        </svg>
+                        Save Preferences
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>
