@@ -1,11 +1,39 @@
 # 💰 SmartExpense AI
 
-A full-stack expense tracking web application built using Flask.
-Manage expenses, track income, analyze financial habits, and monitor users through an admin dashboard.
+A full-stack **expense tracking web application** built with Flask to help users manage finances efficiently.
+Track income, monitor expenses, analyze spending habits, and manage users through a powerful admin dashboard.
 
 ---
 
-## 🔐 Admin Login
+## 🚀 Features
+
+### 👤 User Module
+
+* Secure Registration & Login (Bcrypt encryption)
+* Add, edit, and delete expenses
+* Income tracking system
+* Date-wise filtering
+* Statement view with CSV export
+* Budget calculator
+
+### 📊 Analytics
+
+* Pie Chart visualization
+* Bar Chart analysis
+* Line Chart trends
+* Click-based popup charts (Matplotlib)
+
+### 🛠️ Admin Panel
+
+* Admin authentication
+* View all users
+* Delete users
+* View user profiles
+* Access user financial statements
+
+---
+
+## 🔐 Admin Credentials
 
 ```
 Email    : admin@smartapp.in  
@@ -14,15 +42,38 @@ Password : admin
 
 ---
 
-## 🚀 Setup Instructions
+## 🧰 Tech Stack
 
-### ⚠️ Prerequisite
+| Layer    | Technology            |
+| -------- | --------------------- |
+| Backend  | Flask (Python)        |
+| Database | SQLite                |
+| Charts   | Matplotlib            |
+| Auth     | Bcrypt                |
+| Frontend | HTML, CSS, JavaScript |
 
-Make sure you are using:
+---
+
+## 📦 Project Structure
 
 ```
-Python 3.11 (Recommended)
+ETracker/
+│
+├── app.py
+├── requirements.txt
+├── database.db
+├── templates/
+├── static/
+└── README.md
 ```
+
+---
+
+## ⚙️ Installation & Setup
+
+### 🔹 Prerequisites
+
+* Python 3.11 (Recommended)
 
 ---
 
@@ -56,7 +107,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-If installation fails, install manually:
+If any error occurs:
 
 ```
 pip install flask bcrypt itsdangerous matplotlib
@@ -80,64 +131,16 @@ http://127.0.0.1:5000
 
 ---
 
-## ✨ Features
-
-* 👤 User Registration & Login (Bcrypt encryption)
-* 💸 Expense Tracking
-* 💰 Income Management
-* 📊 Analytics Dashboard
-
-  * Pie Chart
-  * Bar Chart
-  * Line Chart
-* 📅 Date Range Filtering
-* 🧾 Statement View & CSV Export
-* 📉 Budget Calculator
-* 🛠️ Admin Dashboard
-* 👥 User Management
-
-  * View Profile
-  * Delete User
-  * View Statement
-* 📊 Click-based Popup Chart (Matplotlib)
-
----
-
-## 📦 Tech Stack
-
-* **Backend**: Flask (Python)
-* **Database**: SQLite
-* **Charts**: Matplotlib
-* **Authentication**: Bcrypt
-* **Frontend**: HTML, CSS, JavaScript
-
----
-
-## 📁 Project Structure
-
-```
-ETracker/
-│
-├── app.py
-├── requirements.txt
-├── database.db
-├── templates/
-├── static/
-└── README.md
-```
-
----
-
 ## ⚠️ Important Notes
 
-* Do **not use quotes (" ")** while running commands
+* Do NOT use quotes (" ") in terminal commands
 * Always activate virtual environment before installing packages
-* Use **Python 3.11** (Python 3.13 may cause installation errors)
-* If charts don’t load → ensure `matplotlib` is installed
+* Use Python 3.11 (Python 3.13 may cause issues)
+* If charts fail → ensure `matplotlib` is installed
 
 ---
 
-## 🔧 Troubleshooting
+## 🛠️ Troubleshooting
 
 ### ❌ ModuleNotFoundError
 
@@ -145,9 +148,9 @@ ETracker/
 pip install flask
 ```
 
-### ❌ Matplotlib / NumPy Error
+### ❌ Matplotlib / NumPy Issues
 
-➡️ Use Python 3.11 and recreate virtual environment
+* Recreate virtual environment using Python 3.11
 
 ---
 
@@ -161,14 +164,32 @@ pip freeze > requirements.txt
 
 ---
 
-## 🚀 Future Improvements
+## 🚀 Future Enhancements
 
-* Chart animations
-* Advanced analytics insights
-* REST API integration
+* Dark / Light mode toggle
 * Mobile responsive UI
-* Dark/Light theme toggle
+* REST API integration
+* Advanced analytics insights
+* Animated charts
 
 ---
 
-### 💡 Built for learning + real-world project experience
+## 📌 Purpose
+
+This project is designed for:
+
+* Learning full-stack development
+* Understanding real-world expense management systems
+* Practicing Flask + data visualization
+
+---
+
+## 👨‍💻 Author
+
+**Pranav Eswar**
+**Gopika S S**
+**Aju Mathew Thomson**
+**Vishnu S**
+**San Jobin S**
+
+---
