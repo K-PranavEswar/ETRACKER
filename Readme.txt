@@ -1,78 +1,123 @@
-
 # 💰 SmartExpense AI
 
-<p align="center">
-  <b>Smart Expense Tracking • Budget Analysis • Admin Control</b><br>
-  A full-stack Flask web app to manage and analyze personal finances efficiently.
-</p>
+A full-stack expense tracking web application built using Flask.
+Manage expenses, track income, analyze financial habits, and monitor users through an admin dashboard.
 
 ---
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Python-3.11-blue?style=for-the-badge&logo=python">
-  <img src="https://img.shields.io/badge/Flask-Web_App-black?style=for-the-badge&logo=flask">
-  <img src="https://img.shields.io/badge/SQLite-Database-lightgrey?style=for-the-badge&logo=sqlite">
-  <img src="https://img.shields.io/badge/Status-Active-success?style=for-the-badge">
-</p>
+## 🔐 Admin Login
 
----
-
-## 🚀 Features
-
-### 👤 User Module
-
-✔ Secure Authentication (Bcrypt)
-✔ Expense & Income Tracking
-✔ Date-wise Filtering
-✔ CSV Export (Statements)
-✔ Budget Calculator
-
----
-
-### 📊 Analytics
-
-📌 Pie Chart
-📌 Bar Chart
-📌 Line Chart
-📌 Interactive Popup Charts
-
----
-
-### 🛠️ Admin Panel
-
-🔐 Admin Login
-👥 Manage Users
-🗑 Delete Users
-📄 View Profiles
-📊 Access User Reports
-
----
-
-## 🔐 Admin Credentials
-
-```bash
-Email    : admin@smartapp.in
+```
+Email    : admin@smartapp.in  
 Password : admin
 ```
 
 ---
 
-## 🧰 Tech Stack
+## 🚀 Setup Instructions
 
-| 🚀 Layer | 💻 Technology         |
-| -------- | --------------------- |
-| Backend  | Flask (Python)        |
-| Database | SQLite                |
-| Charts   | Matplotlib            |
-| Auth     | Bcrypt                |
-| Frontend | HTML, CSS, JavaScript |
+### ⚠️ Prerequisite
+
+Make sure you are using:
+
+```
+Python 3.11 (Recommended)
+```
 
 ---
 
-## 📦 Project Structure
+### 1️⃣ Create Virtual Environment
 
-```bash
+```
+py -3.11 -m venv venv
+```
+
+---
+
+### 2️⃣ Activate Virtual Environment
+
+**Windows**
+
+```
+venv\Scripts\activate
+```
+
+**Mac / Linux**
+
+```
+source venv/bin/activate
+```
+
+---
+
+### 3️⃣ Install Dependencies
+
+```
+pip install -r requirements.txt
+```
+
+If installation fails, install manually:
+
+```
+pip install flask bcrypt itsdangerous matplotlib
+```
+
+---
+
+### 4️⃣ Run the Application
+
+```
+python app.py
+```
+
+---
+
+## 🌐 Access the App
+
+```
+http://127.0.0.1:5000
+```
+
+---
+
+## ✨ Features
+
+* 👤 User Registration & Login (Bcrypt encryption)
+* 💸 Expense Tracking
+* 💰 Income Management
+* 📊 Analytics Dashboard
+
+  * Pie Chart
+  * Bar Chart
+  * Line Chart
+* 📅 Date Range Filtering
+* 🧾 Statement View & CSV Export
+* 📉 Budget Calculator
+* 🛠️ Admin Dashboard
+* 👥 User Management
+
+  * View Profile
+  * Delete User
+  * View Statement
+* 📊 Click-based Popup Chart (Matplotlib)
+
+---
+
+## 📦 Tech Stack
+
+* **Backend**: Flask (Python)
+* **Database**: SQLite
+* **Charts**: Matplotlib
+* **Authentication**: Bcrypt
+* **Frontend**: HTML, CSS, JavaScript
+
+---
+
+## 📁 Project Structure
+
+```
 ETracker/
+│
 ├── app.py
 ├── requirements.txt
 ├── database.db
@@ -83,98 +128,47 @@ ETracker/
 
 ---
 
-## ⚙️ Setup Guide
+## ⚠️ Important Notes
 
-### 🔹 Requirements
-
-```bash
-Python 3.11
-```
-
----
-
-### 1️⃣ Create Virtual Environment
-
-```bash
-py -3.11 -m venv venv
-```
-
-### 2️⃣ Activate Environment
-
-```bash
-# Windows
-venv\Scripts\activate
-
-# Mac/Linux
-source venv/bin/activate
-```
-
-### 3️⃣ Install Dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### 4️⃣ Run App
-
-```bash
-python app.py
-```
+* Do **not use quotes (" ")** while running commands
+* Always activate virtual environment before installing packages
+* Use **Python 3.11** (Python 3.13 may cause installation errors)
+* If charts don’t load → ensure `matplotlib` is installed
 
 ---
 
-## 🌐 Run Locally
+## 🔧 Troubleshooting
 
-```bash
-http://127.0.0.1:5000
+### ❌ ModuleNotFoundError
+
 ```
-
----
-
-## ⚠️ Notes
-
-* Use **Python 3.11 only**
-* Activate venv before install
-* Install `matplotlib` if charts fail
-
----
-
-## 🛠️ Troubleshooting
-
-```bash
 pip install flask
 ```
 
-```bash
-# If errors → recreate venv using Python 3.11
-```
+### ❌ Matplotlib / NumPy Error
+
+➡️ Use Python 3.11 and recreate virtual environment
 
 ---
 
 ## 🔥 Developer Tip
 
-```bash
+Update dependencies:
+
+```
 pip freeze > requirements.txt
 ```
 
 ---
 
-## 🚀 Future Scope
+## 🚀 Future Improvements
 
-✨ Dark Mode
-📱 Mobile UI
-🌐 REST API
-📊 Advanced Insights
-🎞 Chart Animations
-
----
-
-## 👨‍💻 Team
-
-* Pranav Eswar
-* Gopika S S
-* Aju Mathew Thomson
-* Vishnu S
-* San Jobin S
+* Chart animations
+* Advanced analytics insights
+* REST API integration
+* Mobile responsive UI
+* Dark/Light theme toggle
 
 ---
+
+### 💡 Built for learning + real-world project experience
