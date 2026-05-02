@@ -18,9 +18,9 @@ Track income, monitor expenses, analyze spending habits, and manage users throug
 
 ### 📊 Analytics
 
-* Pie Chart visualization
-* Bar Chart analysis
-* Line Chart trends
+* Pie chart visualization
+* Bar chart analysis
+* Line chart trends
 * Click-based popup charts (Matplotlib)
 
 ### 🛠️ Admin Panel
@@ -35,8 +35,8 @@ Track income, monitor expenses, analyze spending habits, and manage users throug
 
 ## 🔐 Admin Credentials
 
-```
-Email    : admin@smartapp.in  
+```bash
+Email    : admin@smartapp.in
 Password : admin
 ```
 
@@ -56,7 +56,7 @@ Password : admin
 
 ## 📦 Project Structure
 
-```
+```bash
 ETracker/
 │
 ├── app.py
@@ -73,13 +73,15 @@ ETracker/
 
 ### 🔹 Prerequisites
 
-* Python 3.11 (Recommended)
+```bash
+Python 3.11
+```
 
 ---
 
 ### 1️⃣ Create Virtual Environment
 
-```
+```bash
 py -3.11 -m venv venv
 ```
 
@@ -89,13 +91,13 @@ py -3.11 -m venv venv
 
 **Windows**
 
-```
+```bash
 venv\Scripts\activate
 ```
 
 **Mac / Linux**
 
-```
+```bash
 source venv/bin/activate
 ```
 
@@ -103,13 +105,13 @@ source venv/bin/activate
 
 ### 3️⃣ Install Dependencies
 
-```
+```bash
 pip install -r requirements.txt
 ```
 
-If any error occurs:
+If installation fails:
 
-```
+```bash
 pip install flask bcrypt itsdangerous matplotlib
 ```
 
@@ -117,7 +119,7 @@ pip install flask bcrypt itsdangerous matplotlib
 
 ### 4️⃣ Run the Application
 
-```
+```bash
 python app.py
 ```
 
@@ -125,7 +127,7 @@ python app.py
 
 ## 🌐 Access the App
 
-```
+```bash
 http://127.0.0.1:5000
 ```
 
@@ -133,10 +135,10 @@ http://127.0.0.1:5000
 
 ## ⚠️ Important Notes
 
-* Do NOT use quotes (" ") in terminal commands
+* Do **NOT** use quotes (" ") in terminal commands
 * Always activate virtual environment before installing packages
-* Use Python 3.11 (Python 3.13 may cause issues)
-* If charts fail → ensure `matplotlib` is installed
+* Use **Python 3.11** (Python 3.13 may cause compatibility issues)
+* If charts don’t load → ensure `matplotlib` is installed
 
 ---
 
@@ -144,21 +146,21 @@ http://127.0.0.1:5000
 
 ### ❌ ModuleNotFoundError
 
-```
+```bash
 pip install flask
 ```
 
 ### ❌ Matplotlib / NumPy Issues
 
-* Recreate virtual environment using Python 3.11
+```bash
+# Recreate virtual environment using Python 3.11
+```
 
 ---
 
 ## 🔥 Developer Tip
 
-Update dependencies:
-
-```
+```bash
 pip freeze > requirements.txt
 ```
 
@@ -184,12 +186,11 @@ This project is designed for:
 
 ---
 
-## 👨‍💻 Author
+## 👨‍💻 Authors
 
-**Pranav Eswar**
-**Gopika S S**
-**Aju Mathew Thomson**
-**Vishnu S**
-**San Jobin S**
+* **Pranav Eswar**
+* **Gopika S S**
+* **Aju Mathew Thomson**
+* **Vishnu S**
+* **San Jobin S**
 
----
