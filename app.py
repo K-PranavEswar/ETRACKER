@@ -988,21 +988,25 @@ def chart_bar():
     cursor.execute(query, params)
     data = cursor.fetchall()
     conn.close()
+    print("BAR DATA:", data) 
 
     if not data:
         categories = ["No Data"]
         amounts = [0]
     else:
-        categories = [row[0] for row in data]
-        amounts = [row[1] for row in data]
+        categories = [row[0] for row in data if row[0]]
+        amounts = [row[1] for row in data if row[1] is not None]
 
-    plt.style.use('dark_background')
-    plt.figure(figsize=(6,4), facecolor='none')
+    # 💥 IMPORTANT: still empty check
+    if not categories:
+        categories = ["No Data"]
+        amounts = [0]
 
-    plt.bar(categories, amounts, color='#e6af2e')
+    plt.figure(figsize=(6,4))
+    plt.bar(categories, amounts)
 
     img = io.BytesIO()
-    plt.savefig(img, format='png', transparent=True, bbox_inches='tight')
+    plt.savefig(img, format='png')
     img.seek(0)
     plt.close()
 
@@ -1027,21 +1031,25 @@ def chart_line():
     cursor.execute(query, params)
     data = cursor.fetchall()
     conn.close()
+    print("LINE DATA:", data) 
 
     if not data:
         dates = ["No Data"]
         amounts = [0]
     else:
-        dates = [row[0] for row in data]
-        amounts = [row[1] for row in data]
+        dates = [row[0] for row in data if row[0]]
+        amounts = [row[1] for row in data if row[1] is not None]
 
-    plt.style.use('dark_background')
-    plt.figure(figsize=(6,4), facecolor='none')
+    # 💥 CRITICAL FIX
+    if len(dates) < 1:
+        dates = ["No Data"]
+        amounts = [0]
 
-    plt.plot(dates, amounts, marker='o', color='#e6af2e')
+    plt.figure(figsize=(6,4))
+    plt.plot(dates, amounts, marker='o')
 
     img = io.BytesIO()
-    plt.savefig(img, format='png', transparent=True, bbox_inches='tight')
+    plt.savefig(img, format='png')
     img.seek(0)
     plt.close()
 
