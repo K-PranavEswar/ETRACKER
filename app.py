@@ -975,41 +975,42 @@ def chart_bar():
     if "user" not in session:
         return redirect("/login")
 
-    base_query = """
-        SELECT category, SUM(amount)
-        FROM expenses
-    """
+    try:
+        conn = sqlite3.connect(DB_FILE)
+        cursor = conn.cursor()
 
-    query, params = get_filtered_query(base_query)
-    query += " GROUP BY category"
+        cursor.execute("""
+            SELECT category, SUM(amount)
+            FROM expenses
+            WHERE user_email = ?
+            GROUP BY category
+        """, (session["email"],))
 
-    conn = sqlite3.connect(DB_FILE)
-    cursor = conn.cursor()
-    cursor.execute(query, params)
-    data = cursor.fetchall()
-    conn.close()
+        data = cursor.fetchall()
+        conn.close()
 
-    if not data:
-        categories = ["No Data"]
-        amounts = [0]
-    else:
-        categories = [str(row[0]) for row in data]
-        amounts = [float(row[1]) for row in data]
+        if not data:
+            categories = ["No Data"]
+            amounts = [0]
+        else:
+            categories = [str(row[0]) for row in data]
+            amounts = [float(row[1]) for row in data]
 
-    import matplotlib.pyplot as plt
-    plt.figure(figsize=(6,4))
+        import matplotlib.pyplot as plt
+        plt.figure()
 
-    plt.bar(range(len(categories)), amounts)
-    plt.xticks(range(len(categories)), categories, rotation=30)
+        plt.bar(range(len(categories)), amounts)
+        plt.xticks(range(len(categories)), categories)
 
-    plt.tight_layout()
+        img = io.BytesIO()
+        plt.savefig(img, format='png')   # ❌ NO tight_layout
+        img.seek(0)
+        plt.close()
 
-    img = io.BytesIO()
-    plt.savefig(img, format='png')
-    img.seek(0)
-    plt.close()
+        return send_file(img, mimetype='image/png')
 
-    return send_file(img, mimetype='image/png')
+    except Exception as e:
+        return f"Error: {str(e)}"
 
 # ---------------- LINE CHART ----------------
 @app.route("/chart/line")
@@ -1017,41 +1018,43 @@ def chart_line():
     if "user" not in session:
         return redirect("/login")
 
-    base_query = """
-        SELECT date, SUM(amount)
-        FROM expenses
-    """
+    try:
+        conn = sqlite3.connect(DB_FILE)
+        cursor = conn.cursor()
 
-    query, params = get_filtered_query(base_query)
-    query += " GROUP BY date ORDER BY date ASC"
+        cursor.execute("""
+            SELECT date, SUM(amount)
+            FROM expenses
+            WHERE user_email = ?
+            GROUP BY date
+            ORDER BY date
+        """, (session["email"],))
 
-    conn = sqlite3.connect(DB_FILE)
-    cursor = conn.cursor()
-    cursor.execute(query, params)
-    data = cursor.fetchall()
-    conn.close()
+        data = cursor.fetchall()
+        conn.close()
 
-    if not data:
-        dates = ["No Data"]
-        amounts = [0]
-    else:
-        dates = [str(row[0]) for row in data]
-        amounts = [float(row[1]) for row in data]
+        if not data:
+            dates = ["No Data"]
+            amounts = [0]
+        else:
+            dates = [str(row[0]) for row in data]
+            amounts = [float(row[1]) for row in data]
 
-    import matplotlib.pyplot as plt
-    plt.figure(figsize=(6,4))
+        import matplotlib.pyplot as plt
+        plt.figure()
 
-    plt.plot(range(len(dates)), amounts, marker='o')
-    plt.xticks(range(len(dates)), dates, rotation=45)
+        plt.plot(range(len(dates)), amounts, marker='o')
+        plt.xticks(range(len(dates)), dates)
 
-    plt.tight_layout()
+        img = io.BytesIO()
+        plt.savefig(img, format='png')   # ❌ NO tight_layout
+        img.seek(0)
+        plt.close()
 
-    img = io.BytesIO()
-    plt.savefig(img, format='png')
-    img.seek(0)
-    plt.close()
+        return send_file(img, mimetype='image/png')
 
-    return send_file(img, mimetype='image/png')
+    except Exception as e:
+        return f"Error: {str(e)}"
 
 # ---------------- ERROR HANDLERS ----------------
 
