@@ -948,12 +948,12 @@ def chart_pie():
     data = cursor.fetchall()
     conn.close()
 
-    categories = [row[0] for row in data]
-    amounts = [row[1] for row in data]
-
-    if not categories:
+    if not data:
         categories = ["No Data"]
         amounts = [1]
+    else:
+        categories = [row[0] for row in data]
+        amounts = [row[1] for row in data]
 
     plt.style.use('dark_background')
     plt.figure(figsize=(6,6), facecolor='none')
@@ -989,8 +989,12 @@ def chart_bar():
     data = cursor.fetchall()
     conn.close()
 
-    categories = [row[0] for row in data]
-    amounts = [row[1] for row in data]
+    if not data:
+        categories = ["No Data"]
+        amounts = [0]
+    else:
+        categories = [row[0] for row in data]
+        amounts = [row[1] for row in data]
 
     plt.style.use('dark_background')
     plt.figure(figsize=(6,4), facecolor='none')
@@ -1024,8 +1028,12 @@ def chart_line():
     data = cursor.fetchall()
     conn.close()
 
-    dates = [row[0] for row in data]
-    amounts = [row[1] for row in data]
+    if not data:
+        dates = ["No Data"]
+        amounts = [0]
+    else:
+        dates = [row[0] for row in data]
+        amounts = [row[1] for row in data]
 
     plt.style.use('dark_background')
     plt.figure(figsize=(6,4), facecolor='none')
