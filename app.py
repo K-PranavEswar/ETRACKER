@@ -2,8 +2,7 @@ from flask import Flask, render_template, request, redirect, session, Response
 import sqlite3,csv,re
 import bcrypt,os
 import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
+matplotlib.use('Agg')   
 import io
 from flask import send_file
 app = Flask(__name__)
@@ -972,6 +971,7 @@ def chart_pie():
 # ---------------- BAR CHART ----------------
 @app.route("/chart/bar")
 def chart_bar():
+    
     if "user" not in session:
         return redirect("/login")
 
@@ -990,20 +990,21 @@ def chart_bar():
         conn.close()
 
         if not data:
-            categories = ["No Data"]
-            amounts = [0]
+            labels = ["No Data"]
+            values = [0]
         else:
-            categories = [str(row[0]) for row in data]
-            amounts = [float(row[1]) for row in data]
+            labels = [str(row[0]) for row in data]
+            values = [float(row[1]) for row in data]
 
         import matplotlib.pyplot as plt
-        plt.figure()
 
-        plt.bar(range(len(categories)), amounts)
-        plt.xticks(range(len(categories)), categories)
+        plt.figure()
+        plt.bar(range(len(values)), values)
+
+        # ❌ NO xticks (this was causing recursion)
 
         img = io.BytesIO()
-        plt.savefig(img, format='png')   # ❌ NO tight_layout
+        plt.savefig(img, format='png')
         img.seek(0)
         plt.close()
 
@@ -1034,20 +1035,19 @@ def chart_line():
         conn.close()
 
         if not data:
-            dates = ["No Data"]
-            amounts = [0]
+            values = [0]
         else:
-            dates = [str(row[0]) for row in data]
-            amounts = [float(row[1]) for row in data]
+            values = [float(row[1]) for row in data]
 
         import matplotlib.pyplot as plt
-        plt.figure()
 
-        plt.plot(range(len(dates)), amounts, marker='o')
-        plt.xticks(range(len(dates)), dates)
+        plt.figure()
+        plt.plot(values, marker='o')
+
+        # ❌ NO xticks / labels
 
         img = io.BytesIO()
-        plt.savefig(img, format='png')   # ❌ NO tight_layout
+        plt.savefig(img, format='png')
         img.seek(0)
         plt.close()
 
