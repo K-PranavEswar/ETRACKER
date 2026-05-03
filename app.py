@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, session, Response
 import sqlite3,csv,re
 import bcrypt,os
 import matplotlib
-matplotlib.use('Agg')   
+matplotlib.use('Agg')
 import io
 from flask import send_file
 app = Flask(__name__)
@@ -933,78 +933,120 @@ def chart_pie():
     if "user" not in session:
         return redirect("/login")
 
-    base_query = """
-        SELECT category, SUM(amount)
-        FROM expenses
-    """
-
-    query, params = get_filtered_query(base_query)
-    query += " GROUP BY category"
-
-    conn = sqlite3.connect(DB_FILE)
-    cursor = conn.cursor()
-    cursor.execute(query, params)
-    data = cursor.fetchall()
-    conn.close()
-
-    if not data:
-        categories = ["No Data"]
-        amounts = [1]
-    else:
-        categories = [row[0] for row in data]
-        amounts = [row[1] for row in data]
-
-    plt.style.use('dark_background')
-    plt.figure(figsize=(6,6), facecolor='none')
-
-    colors = ['#e6af2e', '#2ecc71', '#3498db', '#9b59b6']
-
-    plt.pie(amounts, labels=categories, autopct='%1.1f%%', colors=colors)
-
-    img = io.BytesIO()
-    plt.savefig(img, format='png', transparent=True, bbox_inches='tight')
-    img.seek(0)
-    plt.close()
-
-    return send_file(img, mimetype='image/png')
-
-# ---------------- BAR CHART ----------------
-@app.route("/chart/bar")
-def chart_bar():
-    
-    if "user" not in session:
-        return redirect("/login")
-
     try:
-        conn = sqlite3.connect(DB_FILE)
-        cursor = conn.cursor()
-
-        cursor.execute("""
+        base_query = """
             SELECT category, SUM(amount)
             FROM expenses
-            WHERE user_email = ?
-            GROUP BY category
-        """, (session["email"],))
+        """
 
+        query, params = get_filtered_query(base_query)
+        query += " GROUP BY category"
+
+        conn = sqlite3.connect(DB_FILE)
+        cursor = conn.cursor()
+        cursor.execute(query, params)
         data = cursor.fetchall()
         conn.close()
 
         if not data:
-            labels = ["No Data"]
+            categories = ["No Data"]
+            amounts = [1]
+        else:
+            categories = [str(row[0]) for row in data]
+            amounts = [float(row[1]) for row in data]
+
+        import matplotlib.pyplot as plt
+
+        plt.close('all')
+        plt.figure(figsize=(6,6), facecolor='none')
+
+        colors = ['#e6af2e', '#2ecc71', '#3498db', '#9b59b6']
+
+        plt.pie(
+             amounts,
+             labels=categories,
+             autopct='%1.1f%%',
+             colors=colors[:len(categories)],
+             textprops={'color': '#ffffff'}
+        )
+
+        img = io.BytesIO()
+        plt.savefig(img, format='png', transparent=True, bbox_inches='tight')
+        img.seek(0)
+        plt.close()
+        return send_file(img, mimetype='image/png')
+
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+# ---------------- BAR CHART ----------------
+@app.route("/chart/bar")
+def chart_bar():
+    if "user" not in session:
+        return redirect("/login")
+
+    try:
+        base_query = """
+            SELECT category, SUM(amount)
+            FROM expenses
+        """
+
+        query, params = get_filtered_query(base_query)
+        query += " GROUP BY category"
+
+        conn = sqlite3.connect(DB_FILE)
+        cursor = conn.cursor()
+        cursor.execute(query, params)
+        data = cursor.fetchall()
+        conn.close()
+
+        # ✅ Handle empty data
+        if not data:
+            categories = ["No Data"]
             values = [0]
         else:
-            labels = [str(row[0]) for row in data]
+            categories = [row[0] for row in data]
             values = [float(row[1]) for row in data]
 
         import matplotlib.pyplot as plt
 
-        plt.figure()
-        plt.bar(range(len(values)), values)
+        plt.close('all')
+        plt.figure(figsize=(6,4), facecolor='none')
 
-        # ❌ NO xticks (this was causing recursion)
+        colors = ['#e6af2e', '#2ecc71', '#3498db', '#9b59b6']
+
+        bars = plt.bar(
+            categories,
+            values,
+            color=colors[:len(categories)]
+        )
+
+        # ✅ Label settings
+        plt.xlabel("Category", color='white')
+        plt.ylabel("Amount", color='white')
+        plt.xticks(rotation=20, color='white')
+        plt.yticks(color='white')
+
+        # ✅ Add values on top of bars
+        for bar in bars:
+            height = bar.get_height()
+            plt.text(
+                bar.get_x() + bar.get_width()/2,
+                height,
+                f'{int(height)}',
+                ha='center',
+                va='bottom',
+                color='white',
+                fontsize=9
+            )
 
         img = io.BytesIO()
-        plt.savefig(img, format='png')
+        plt.savefig(
+            img,
+            format='png',
+            transparent=True,
+            bbox_inches='tight'
+        )
         img.seek(0)
         plt.close()
 
@@ -1020,34 +1062,66 @@ def chart_line():
         return redirect("/login")
 
     try:
-        conn = sqlite3.connect(DB_FILE)
-        cursor = conn.cursor()
-
-        cursor.execute("""
+        base_query = """
             SELECT date, SUM(amount)
             FROM expenses
-            WHERE user_email = ?
-            GROUP BY date
-            ORDER BY date
-        """, (session["email"],))
+        """
 
+        query, params = get_filtered_query(base_query)
+        query += " GROUP BY date ORDER BY date ASC"
+
+        conn = sqlite3.connect(DB_FILE)
+        cursor = conn.cursor()
+        cursor.execute(query, params)
         data = cursor.fetchall()
         conn.close()
 
+        # ✅ Handle empty data
         if not data:
+            dates = ["No Data"]
             values = [0]
         else:
+            dates = [row[0] for row in data]
             values = [float(row[1]) for row in data]
 
         import matplotlib.pyplot as plt
 
-        plt.figure()
-        plt.plot(values, marker='o')
+        plt.close('all')
+        plt.figure(figsize=(6,4), facecolor='none')
 
-        # ❌ NO xticks / labels
+        plt.plot(
+            dates,
+            values,
+            marker='o',
+            color='#e6af2e',
+            linewidth=2
+        )
+
+        # ✅ Axis styling
+        plt.xlabel("Date", color='white')
+        plt.ylabel("Amount", color='white')
+        plt.xticks(rotation=30, color='white')
+        plt.yticks(color='white')
+
+        # ✅ Value labels
+        for i, v in enumerate(values):
+            plt.text(
+                dates[i],
+                v,
+                str(int(v)),
+                ha='center',
+                va='bottom',
+                color='white',
+                fontsize=8
+            )
 
         img = io.BytesIO()
-        plt.savefig(img, format='png')
+        plt.savefig(
+            img,
+            format='png',
+            transparent=True,
+            bbox_inches='tight'
+        )
         img.seek(0)
         plt.close()
 
@@ -1055,7 +1129,6 @@ def chart_line():
 
     except Exception as e:
         return f"Error: {str(e)}"
-
 # ---------------- ERROR HANDLERS ----------------
 
 @app.errorhandler(404)
