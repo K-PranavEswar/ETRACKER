@@ -988,22 +988,21 @@ def chart_bar():
     cursor.execute(query, params)
     data = cursor.fetchall()
     conn.close()
-    print("BAR DATA:", data) 
 
     if not data:
         categories = ["No Data"]
         amounts = [0]
     else:
-        categories = [row[0] for row in data if row[0]]
-        amounts = [row[1] for row in data if row[1] is not None]
+        categories = [str(row[0]) for row in data]
+        amounts = [float(row[1]) for row in data]
 
-    # 💥 IMPORTANT: still empty check
-    if not categories:
-        categories = ["No Data"]
-        amounts = [0]
-
+    import matplotlib.pyplot as plt
     plt.figure(figsize=(6,4))
-    plt.bar(categories, amounts)
+
+    plt.bar(range(len(categories)), amounts)
+    plt.xticks(range(len(categories)), categories, rotation=30)
+
+    plt.tight_layout()
 
     img = io.BytesIO()
     plt.savefig(img, format='png')
@@ -1031,22 +1030,21 @@ def chart_line():
     cursor.execute(query, params)
     data = cursor.fetchall()
     conn.close()
-    print("LINE DATA:", data) 
 
     if not data:
         dates = ["No Data"]
         amounts = [0]
     else:
-        dates = [row[0] for row in data if row[0]]
-        amounts = [row[1] for row in data if row[1] is not None]
+        dates = [str(row[0]) for row in data]
+        amounts = [float(row[1]) for row in data]
 
-    # 💥 CRITICAL FIX
-    if len(dates) < 1:
-        dates = ["No Data"]
-        amounts = [0]
-
+    import matplotlib.pyplot as plt
     plt.figure(figsize=(6,4))
-    plt.plot(dates, amounts, marker='o')
+
+    plt.plot(range(len(dates)), amounts, marker='o')
+    plt.xticks(range(len(dates)), dates, rotation=45)
+
+    plt.tight_layout()
 
     img = io.BytesIO()
     plt.savefig(img, format='png')
