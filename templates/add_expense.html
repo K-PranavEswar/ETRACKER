@@ -228,15 +228,30 @@
             </div>
 
             <div class="input-group select-wrapper">
-                <label for="category">Category</label>
-                <select id="category" name="category" required>
-                    <option value="" disabled selected>Select a category</option>
-                    <option value="Food">Food</option>
-                    <option value="Travel">Travel</option>
-                    <option value="Shopping">Shopping</option>
-                    <option value="Other">Other</option>
-                </select>
-            </div>
+
+    <label for="category">
+        Category
+    </label>
+
+    <select id="category" name="category" required>
+
+        <option value="" disabled selected>
+            Select a category
+        </option>
+
+        {% for category in categories %}
+
+        <option value="{{ category.category_name }}">
+
+            {{ category.category_name }}
+
+        </option>
+
+        {% endfor %}
+
+    </select>
+
+</div>
 
             <div class="form-row">
                 <div class="input-group">

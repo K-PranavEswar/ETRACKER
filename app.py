@@ -47,6 +47,29 @@ def init_db():
                 date TEXT
             )
         """)
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS categories (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                category_name TEXT UNIQUE NOT NULL
+            )
+        """)
+
+        default_categories = [
+            "Food",
+            "Travel",
+            "Shopping",
+            "Bills",
+            "Entertainment"
+        ]
+
+        for category in default_categories:
+            try:
+                cursor.execute(
+                    "INSERT INTO categories (category_name) VALUES (?)",
+                    (category,)
+                )
+            except:
+                pass
 
         try:
             cursor.execute("ALTER TABLE users ADD COLUMN budget REAL DEFAULT 0")
@@ -289,33 +312,46 @@ def fix_db():
 def dashboard():
     if "user" not in session:
         return redirect("/login")
-
     try:
         conn = sqlite3.connect(DB_FILE)
+        conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
-
-        # Get all user expenses
-        cursor.execute("SELECT * FROM expenses WHERE user_email = ?", (session["email"],))
+        # Expenses
+        cursor.execute(
+            "SELECT * FROM expenses WHERE user_email = ?",
+            (session["email"],)
+        )
         expenses = cursor.fetchall()
-
-        # Total expenses
-        cursor.execute("SELECT SUM(amount) FROM expenses WHERE user_email = ?", (session["email"],))
+        # Total expense
+        cursor.execute(
+            "SELECT SUM(amount) FROM expenses WHERE user_email = ?",
+            (session["email"],)
+        )
         total = cursor.fetchone()[0] or 0
-
-        # Monthly expenses
+        # Monthly
         cursor.execute("""
-            SELECT SUM(amount) FROM expenses 
-            WHERE user_email = ? 
+            SELECT SUM(amount)
+            FROM expenses
+            WHERE user_email = ?
             AND strftime('%m', date)=strftime('%m','now')
         """, (session["email"],))
         monthly = cursor.fetchone()[0] or 0
-
-        # Total income
-        cursor.execute("SELECT SUM(amount) FROM income WHERE user_email = ?", (session["email"],))
+        # Income
+        cursor.execute(
+            "SELECT SUM(amount) FROM income WHERE user_email = ?",
+            (session["email"],)
+        )
         income = cursor.fetchone()[0] or 0
-
-        # ✅ REAL BALANCE
         balance = income - total
+        
+        # FETCH CATEGORIES
+        cursor.execute("""
+            SELECT *
+            FROM categories
+            ORDER BY category_name ASC
+        """)
+
+        categories = cursor.fetchall()
 
         conn.close()
 
@@ -326,11 +362,16 @@ def dashboard():
             monthly=monthly,
             expenses=expenses,
             balance=balance,
-            income=income 
+            income=income,
+            categories=categories
         )
 
-    except:
-        return render_template("error.html", message="Dashboard loading failed")
+    except Exception as e:
+
+        return render_template(
+            "error.html",
+            message=str(e)
+        )
         
 # ---------------- ADMIN DASHBOARD ----------------
 @app.route("/admin-dashboard")
@@ -403,6 +444,74 @@ def admin_dashboard():
     except Exception as e:
         return render_template("error.html", message=f"Admin error: {str(e)}")
 
+# ---------------- ADMIN CATEGORY MANAGEMENT ----------------
+@app.route("/admin/category", methods=["GET", "POST"])
+def admin_category():
+
+    if "admin" not in session:
+        return redirect("/login")
+
+    conn = sqlite3.connect(DB_FILE)
+
+    conn.row_factory = sqlite3.Row
+
+    cursor = conn.cursor()
+
+    if request.method == "POST":
+
+        category = request.form.get("category")
+
+        if category:
+
+            try:
+
+                cursor.execute(
+                    "INSERT INTO categories(category_name) VALUES(?)",
+                    (category,)
+                )
+
+                conn.commit()
+
+            except:
+                pass
+
+        return redirect("/admin/category")
+
+    cursor.execute("""
+        SELECT * FROM categories
+        ORDER BY category_name ASC
+    """)
+
+    categories = cursor.fetchall()
+
+    conn.close()
+
+    return render_template(
+        "admin/category.html",
+        categories=categories
+    )
+@app.route("/delete-category/<int:id>")
+def delete_category(id):
+
+    if "admin" not in session:
+        return redirect("/login")
+
+    conn = sqlite3.connect(DB_FILE)
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "DELETE FROM categories WHERE id=?",
+        (id,)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return redirect("/admin/category")
+
+#------------------ USER PROFILE in admin ----------------
+
 @app.route("/admin/user/<int:user_id>")
 def user_profile(user_id):
     if "admin" not in session:
@@ -429,63 +538,6 @@ def user_profile(user_id):
 
     except Exception as e:
         return render_template("error.html", message=str(e))
-
-@app.route("/admin/user-statement/<int:user_id>")
-def generate_user_statement(user_id):
-    if "admin" not in session:
-        return redirect("/login")
-
-    conn = sqlite3.connect(DB_FILE)
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
-
-    cursor.execute("SELECT * FROM users WHERE id=?", (user_id,))
-    user = cursor.fetchone()
-
-    if not user:
-        conn.close()
-        return render_template("error.html", message="User not found")
-
-    user_email = user["email"]
-
-    cursor.execute("""
-        SELECT 'expense' as type, title as source, category, amount, date
-        FROM expenses
-        WHERE user_email=?
-
-        UNION ALL
-
-        SELECT 'income' as type, source, 'Income' as category, amount, date
-        FROM income
-        WHERE user_email=?
-
-        ORDER BY date DESC
-    """, (user_email, user_email))
-
-    transactions = cursor.fetchall()
-
-    total_expense = sum(
-        row["amount"] for row in transactions
-        if row["type"] == "expense"
-    )
-
-    total_income = sum(
-        row["amount"] for row in transactions
-        if row["type"] == "income"
-    )
-
-    balance = total_income - total_expense
-
-    conn.close()
-
-    return render_template(
-    "admin/user_statement.html",
-    user=user,
-    transactions=transactions,
-    total_expense=total_expense,
-    total_income=total_income,
-    balance=balance
-)
 
 @app.route("/admin/users")
 def admin_users():
@@ -871,39 +923,78 @@ def change_password():
 # ---------------- ADD EXPENSE ----------------
 @app.route("/add-expense", methods=["GET", "POST"])
 def add_expense():
+
     if "user" not in session:
         return redirect("/login")
 
-    # If the user submits the form
+    conn = sqlite3.connect(DB_FILE)
+
+    conn.row_factory = sqlite3.Row
+
+    cursor = conn.cursor()
+
+    # Fetch categories
+    cursor.execute("""
+        SELECT * FROM categories
+        ORDER BY category_name ASC
+    """)
+
+    categories = cursor.fetchall()
+
+    # ---------------- POST ----------------
+
     if request.method == "POST":
+
         try:
+
             title = request.form.get("title")
             amount = request.form.get("amount")
             category = request.form.get("category")
             date = request.form.get("date")
 
             if not title or not amount or not category or not date:
-                return render_template("add_expense.html", error="All fields required")
 
-            conn = sqlite3.connect(DB_FILE)
-            cursor = conn.cursor()
+                return render_template(
+                    "add_expense.html",
+                    error="All fields required",
+                    categories=categories
+                )
 
             cursor.execute(
-                "INSERT INTO expenses (user_email, title, amount, category, date) VALUES (?, ?, ?, ?, ?)",
-                (session["email"], title, amount, category, date)
+                """
+                INSERT INTO expenses
+                (user_email, title, amount, category, date)
+
+                VALUES (?, ?, ?, ?, ?)
+                """,
+
+                (
+                    session["email"],
+                    title,
+                    amount,
+                    category,
+                    date
+                )
             )
 
             conn.commit()
-            conn.close()
 
             return redirect("/dashboard")
 
-        except:
-            return render_template("add_expense.html", error="Failed to add expense")
+        except Exception as e:
 
-    # If it's a GET request (user just navigating to the page)
-    return render_template("add_expense.html")
+            return render_template(
+                "add_expense.html",
+                error=str(e),
+                categories=categories
+            )
 
+    # ---------------- GET ----------------
+
+    return render_template(
+        "add_expense.html",
+        categories=categories
+    )
 # ---------------- ANALYTICS ----------------
 @app.route("/analytics")
 def analytics():
