@@ -285,6 +285,7 @@ def login_user():
 
     except Exception as e:
         return render_template("login.html", error=str(e))
+    
 
 @app.route("/fix-db")
 def fix_db():
