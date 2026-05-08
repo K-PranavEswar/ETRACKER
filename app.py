@@ -425,8 +425,8 @@ def admin_dashboard():
         """)
         recent_trend = cursor.fetchall()
 
-        trend_labels = [row["date"] for row in reversed(recent_trend)]
-        trend_values = [row["total"] for row in reversed(recent_trend)]
+        trend_labels = [row["date"] for row in reversed(recent_trend)]     #x axis labels (dates)
+        trend_values = [row["total"] for row in reversed(recent_trend)]    #y axis values (total expenses)
 
         conn.close()
 
