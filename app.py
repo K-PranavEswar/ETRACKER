@@ -721,38 +721,81 @@ def user_expense_analytics(user_id):
     
 @app.route("/delete-user/<int:user_id>")
 def delete_user(user_id):
+
     if "admin" not in session:
         return redirect("/login")
 
+    conn = None
+
     try:
-        conn = sqlite3.connect(DB_FILE)
+        conn = sqlite3.connect(
+            DB_FILE,
+            timeout=10,
+            check_same_thread=False
+        )
+
         cursor = conn.cursor()
 
-        # Step 1: Get user email
-        cursor.execute("SELECT email FROM users WHERE id = ?", (user_id,))
+        # Get user email
+        cursor.execute(
+            "SELECT email FROM users WHERE id = ?",
+            (user_id,)
+        )
+
         user = cursor.fetchone()
 
         if not user:
-            conn.close()
             return "User not found"
 
         email = user[0]
 
-        # Step 2: Delete related data first
-        cursor.execute("DELETE FROM expenses WHERE user_email = ?", (email,))
-        cursor.execute("DELETE FROM income WHERE user_email = ?", (email,))
+        # Delete user's expenses
+        cursor.execute(
+            "DELETE FROM expenses WHERE user_email = ?",
+            (email,)
+        )
 
-        # Step 3: Delete user
-        cursor.execute("DELETE FROM users WHERE id = ?", (user_id,))
+        # Delete user's income
+        cursor.execute(
+            "DELETE FROM income WHERE user_email = ?",
+            (email,)
+        )
+
+        # Delete user account
+        cursor.execute(
+            "DELETE FROM users WHERE id = ?",
+            (user_id,)
+        )
 
         conn.commit()
-        conn.close()
 
         return redirect("/admin/users")
 
-    except Exception as e:
-        return str(e)
+    except sqlite3.OperationalError as e:
 
+        if "locked" in str(e):
+            return render_template(
+                "error.html",
+                message="Database is busy. Please try again."
+            )
+
+        return render_template(
+            "error.html",
+            message=str(e)
+        )
+
+    except Exception as e:
+
+        return render_template(
+            "error.html",
+            message=str(e)
+        )
+
+    finally:
+
+        if conn:
+            conn.close()
+            
 #----------------- BUDGET CALCULATOR ----------------
 @app.route('/budget', methods=['GET', 'POST'])
 def budget():
