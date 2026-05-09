@@ -570,82 +570,16 @@ def admin_users():
         )
         total_expense = cursor.fetchone()[0]
 
-        cursor.execute(
-        "SELECT COALESCE(SUM(amount),0) FROM income WHERE user_email=?", (email,)
-        )
-        total_income = cursor.fetchone()[0]
-
         users.append({
             "id": user_id,
             "username": fullname,
             "email": email,
             "joined_on": joined_on,
             "total_expense": total_expense,
-            "total_income": total_income
         })
 
     conn.close()
     return render_template("admin/users.html", users=users)
-
-@app.route("/admin/user-expense-chart/<int:user_id>")
-def user_expense_chart(user_id):
-    if "admin" not in session:
-        return redirect("/login")
-
-    conn = sqlite3.connect(DB_FILE)
-    cursor = conn.cursor()
-
-    cursor.execute("SELECT email FROM users WHERE id=?", (user_id,))
-    user = cursor.fetchone()
-
-    if not user:
-        return "No user"
-
-    email = user[0]
-
-    cursor.execute("""
-        SELECT category, SUM(amount)
-        FROM expenses
-        WHERE user_email=?
-        GROUP BY category
-    """, (email,))
-
-    data = cursor.fetchall()
-    conn.close()
-
-    categories = [row[0] for row in data]
-    amounts = [row[1] for row in data]
-
-    import matplotlib.pyplot as plt
-    import io
-    from flask import send_file
-
-    plt.style.use('dark_background')
-    plt.figure(figsize=(5,4), facecolor='none')
-
-    colors = [
-    '#e6af2e',  # gold
-    '#1abc9c',  # teal
-    '#e74c3c',  # red
-    '#3498db',  # blue
-    '#9b59b6'   # purple
-    ]
-
-    plt.pie(
-    amounts,
-    labels=categories,
-    autopct='%1.1f%%',
-    colors=colors[:len(categories)],
-    textprops={'color': '#ffffff', 'fontsize': 10},
-    wedgeprops={'linewidth': 2, 'edgecolor': '#0d1210'}
-    )
-
-    img = io.BytesIO()
-    plt.savefig(img, format='png', transparent=True, bbox_inches='tight')
-    img.seek(0)
-    plt.close()
-
-    return send_file(img, mimetype='image/png')
 
 
 @app.route("/admin/settings")
@@ -659,7 +593,6 @@ def admin_settings():
         "admin/ad-settings.html",
         theme=theme
     )
-
 
 @app.route("/admin/settings/save", methods=["POST"])
 def save_admin_settings():

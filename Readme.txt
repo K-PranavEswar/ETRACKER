@@ -172,3 +172,6 @@ pip freeze > requirements.txt
 ---
 
 ### 💡 Built for learning + real-world project experience
+
+
+#monthly , #income , #balance , #total ,#expenses = variables
