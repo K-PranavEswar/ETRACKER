@@ -1,4 +1,3 @@
-```markdown
 <div align="center">
   
   # 💰 SmartExpense AI
@@ -7,10 +6,10 @@
     <b>A powerful full-stack expense tracking web application built with Flask.</b>
   </p>
 
-  <img src="[https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python&logoColor=white](https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python&logoColor=white)" alt="Python" />
-  <img src="[https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white](https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white)" alt="Flask" />
-  <img src="[https://img.shields.io/badge/SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white](https://img.shields.io/badge/SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white)" alt="SQLite" />
-  <img src="[https://img.shields.io/badge/HTML5_&_CSS3-E34F26?style=for-the-badge&logo=html5&logoColor=white](https://img.shields.io/badge/HTML5_&_CSS3-E34F26?style=for-the-badge&logo=html5&logoColor=white)" alt="HTML/CSS" />
+  <img src="https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
+  <img src="https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white" alt="Flask" />
+  <img src="https://img.shields.io/badge/SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQLite" />
+  <img src="https://img.shields.io/badge/HTML5_&_CSS3-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML/CSS" />
 
   <br />
   <br />
@@ -55,54 +54,24 @@ Follow these instructions to get a local copy up and running.
 Navigate to your desired folder and open your terminal.
 
 ### 2️⃣ Create a Virtual Environment
-```bash
-py -3.11 -m venv venv
-
-```
+`py -3.11 -m venv venv`
 
 ### 3️⃣ Activate the Virtual Environment
-
-* **Windows:**
-```bash
-venv\Scripts\activate
-
-```
-
-
-* **Mac / Linux:**
-```bash
-source venv/bin/activate
-
-```
-
-
+- **Windows:** `venv\Scripts\activate`
+- **Mac / Linux:** `source venv/bin/activate`
 
 ### 4️⃣ Install Dependencies
+`pip install -r requirements.txt`
 
-```bash
-pip install -r requirements.txt
-
-```
-
-> [!NOTE]
+> [!NOTE]  
 > If installation fails, install the core packages manually:
 > `pip install flask bcrypt itsdangerous matplotlib`
 
 ### 5️⃣ Run the Application
-
-```bash
-python app.py
-
-```
+`python app.py`
 
 ### 6️⃣ Access the App
-
-Open your browser and navigate to:
-
-```text
-http://127.0.0.1:5000
-
-```
+Open your browser and navigate to: `http://127.0.0.1:5000`
 
 ---
 
@@ -111,7 +80,7 @@ http://127.0.0.1:5000
 To access the admin dashboard, use the following credentials:
 
 | Field | Value |
-| --- | --- |
+| :--- | :--- |
 | **Email** | `admin@smartapp.in` |
 | **Password** | `admin` |
 
@@ -119,7 +88,6 @@ To access the admin dashboard, use the following credentials:
 
 ## 📁 Project Structure
 
-```text
 ETracker/
 │
 ├── app.py                # Main application file
@@ -129,19 +97,17 @@ ETracker/
 ├── static/               # CSS, JS, and image assets
 └── README.md             # Project documentation
 
-```
-
 ---
 
 ## 🔧 Troubleshooting
 
 | Error | Solution |
-| --- | --- |
+| :--- | :--- |
 | `ModuleNotFoundError: No module named 'flask'` | Run `pip install flask` |
 | **Matplotlib / NumPy Error** | Ensure you are using Python 3.11. Delete your `venv` folder and recreate it. |
 | **Charts not loading** | Verify `matplotlib` is successfully installed and the virtual environment is activated. |
 
-> [!TIP]
+> [!TIP]  
 > **Developer Tip:** When adding new packages, always update your dependencies file by running:
 > `pip freeze > requirements.txt`
 
@@ -149,12 +115,14 @@ ETracker/
 
 ## 🚀 Future Roadmap
 
-* [ ] Interactive chart animations
-* [ ] Advanced AI analytics and spending insights
-* [ ] REST API integration
-* [ ] Enhanced mobile-responsive UI
-* [ ] Dark/Light theme toggle
+- [ ] Interactive chart animations
+- [ ] Advanced AI analytics and spending insights
+- [ ] REST API integration
+- [ ] Enhanced mobile-responsive UI
+- [ ] Dark/Light theme toggle
 
 ---
 
-Paste cheythitt **"Preview"** tab onnu click cheythu nokku, ippo pakka aayirikkum! 🔥
+<div align="center">
+  <p>Developed with ❤️ by <b>Aju Mathew Thomson,Gopika S S,K Pranav Eswar,San Jobin S,Vishnu S</b></p>
+</div>
