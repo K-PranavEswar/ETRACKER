@@ -1,4 +1,3 @@
-```text
 <div align="center">
   
   # 🗄️ Database Architecture – ETRACKER
@@ -7,7 +6,7 @@
     <b>ETRACKER uses SQLite to securely manage user accounts, expenses, income tracking, and spending categories.</b>
   </p>
 
-  <img src="[https://img.shields.io/badge/Database-SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white](https://img.shields.io/badge/Database-SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white)" alt="SQLite" />
+  <img src="https://img.shields.io/badge/Database-SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQLite" />
 
 </div>
 
@@ -53,7 +52,6 @@ erDiagram
         INTEGER id PK
         TEXT category_name
     }
-
 ```
 
 ---
@@ -61,11 +59,10 @@ erDiagram
 ## 🗂️ Database Tables
 
 ### 👤 1. Users Table
-
 Stores registered user information, login credentials, and budget settings.
 
 | Field Name | Type | Description |
-| --- | --- | --- |
+| :--- | :--- | :--- |
 | `id` | `INTEGER` | Unique User ID *(Primary Key)* |
 | `fullname` | `TEXT` | Full name of the user |
 | `email` | `TEXT` | Unique email address |
@@ -74,11 +71,10 @@ Stores registered user information, login credentials, and budget settings.
 | `joined_on` | `TEXT` | Account registration date |
 
 ### 💸 2. Expenses Table
-
 Stores all user expense records and spending history.
 
 | Field Name | Type | Description |
-| --- | --- | --- |
+| :--- | :--- | :--- |
 | `id` | `INTEGER` | Unique Expense ID *(Primary Key)* |
 | `user_email` | `TEXT` | Connected user email |
 | `title` | `TEXT` | Expense title/name |
@@ -87,11 +83,10 @@ Stores all user expense records and spending history.
 | `date` | `TEXT` | Expense date |
 
 ### 💰 3. Income Table
-
 Stores income or balance added by the user.
 
 | Field Name | Type | Description |
-| --- | --- | --- |
+| :--- | :--- | :--- |
 | `id` | `INTEGER` | Unique Income ID *(Primary Key)* |
 | `user_email` | `TEXT` | Connected user email |
 | `source` | `TEXT` | Income source |
@@ -99,16 +94,14 @@ Stores income or balance added by the user.
 | `date` | `TEXT` | Income added date |
 
 ### 🏷️ 4. Categories Table
-
 Stores predefined expense categories used throughout the application.
 
 | Field Name | Type | Description |
-| --- | --- | --- |
+| :--- | :--- | :--- |
 | `id` | `INTEGER` | Category ID *(Primary Key)* |
-| `category_name` | `TEXT` | Name of expense category |
+| `category_name`| `TEXT` | Name of expense category |
 
-```
+---
 
-Paste cheythitt aa **Preview** tab-il koodi onnu click cheyyan marakkalle! 🔥
-
-```
+> [!TIP]
+> **Developer Note:** Since SQLite is used, the entire database is stored locally in the `database.db` file. You can use tools like **DB Browser for SQLite** to open and inspect the data visually during development.
