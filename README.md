@@ -156,3 +156,5 @@ ETracker/
 * [ ] Dark/Light theme toggle
 
 ---
+
+Paste cheythitt **"Preview"** tab onnu click cheythu nokku, ippo pakka aayirikkum! 🔥
