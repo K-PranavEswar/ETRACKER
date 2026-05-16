@@ -1,4 +1,4 @@
-```markdown
+```text
 <div align="center">
   
   # 🗄️ Database Architecture – ETRACKER
@@ -7,7 +7,7 @@
     <b>ETRACKER uses SQLite to securely manage user accounts, expenses, income tracking, and spending categories.</b>
   </p>
 
-  <img src="https://img.shields.io/badge/Database-SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQLite" />
+  <img src="[https://img.shields.io/badge/Database-SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white](https://img.shields.io/badge/Database-SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white)" alt="SQLite" />
 
 </div>
 
@@ -107,9 +107,8 @@ Stores predefined expense categories used throughout the application.
 | `id` | `INTEGER` | Category ID *(Primary Key)* |
 | `category_name` | `TEXT` | Name of expense category |
 
----
+```
 
-
-Ithu oru puthiya file aayi (e.g., `DATABASE.md`) save cheythal valare nannayirikkum. GitHub-il Preview eduthu nokku, aah diagram varunnathu kanam! Adipoli aayittundu ithu. 🚀
+Paste cheythitt aa **Preview** tab-il koodi onnu click cheyyan marakkalle! 🔥
 
 ```
