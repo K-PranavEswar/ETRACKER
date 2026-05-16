@@ -14,8 +14,6 @@
 
 ## 🏗️ Entity-Relationship Diagram
 
-*GitHub automatically renders this as a visual database diagram.*
-
 ```mermaid
 erDiagram
     USERS ||--o{ EXPENSES : "tracks"
