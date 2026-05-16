@@ -14,7 +14,8 @@
   <br />
   <br />
 
-  *[Add a screenshot of your dashboard here]*
+  <img width="1897" height="900" alt="Screenshot 2026-05-14 160158" src="https://github.com/user-attachments/assets/e0aeb6ff-b9db-4886-bc84-2948f9a8ee90" />
+
 </div>
 
 ---
