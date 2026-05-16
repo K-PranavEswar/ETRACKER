@@ -7,11 +7,10 @@
     <b>A powerful full-stack expense tracking web application built with Flask.</b>
   </p>
 
-  <!-- Badges -->
-  <img src="https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
-  <img src="https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white" alt="Flask" />
-  <img src="https://img.shields.io/badge/SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQLite" />
-  <img src="https://img.shields.io/badge/HTML5_&_CSS3-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML/CSS" />
+  <img src="[https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python&logoColor=white](https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python&logoColor=white)" alt="Python" />
+  <img src="[https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white](https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white)" alt="Flask" />
+  <img src="[https://img.shields.io/badge/SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white](https://img.shields.io/badge/SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white)" alt="SQLite" />
+  <img src="[https://img.shields.io/badge/HTML5_&_CSS3-E34F26?style=for-the-badge&logo=html5&logoColor=white](https://img.shields.io/badge/HTML5_&_CSS3-E34F26?style=for-the-badge&logo=html5&logoColor=white)" alt="HTML/CSS" />
 
   <br />
   <br />
@@ -67,17 +66,16 @@ py -3.11 -m venv venv
 ```bash
 venv\Scripts\activate
 
+```
+
+
+* **Mac / Linux:**
+```bash
+source venv/bin/activate
 
 ```
 
 
-
-```
-- **Mac / Linux:**
-  ```bash
-  source venv/bin/activate
-
-```
 
 ### 4️⃣ Install Dependencies
 
@@ -102,7 +100,7 @@ python app.py
 Open your browser and navigate to:
 
 ```text
-[http://127.0.0.1:5000](http://127.0.0.1:5000)
+http://127.0.0.1:5000
 
 ```
 
