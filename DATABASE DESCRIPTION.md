@@ -100,6 +100,3 @@ Stores predefined expense categories used throughout the application.
 | `category_name`| `TEXT` | Name of expense category |
 
 ---
-
-> [!TIP]
-> **Developer Note:** Since SQLite is used, the entire database is stored locally in the `database.db` file. You can use tools like **DB Browser for SQLite** to open and inspect the data visually during development.
